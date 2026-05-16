@@ -15,7 +15,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		CC273CF62FB8F45A006B4B89 /* Forget-Me-Not.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Forget-Me-Not.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC273CF62FB8F45A006B4B89 /* Celmi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Celmi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -66,7 +66,7 @@
 		CC273CF72FB8F45A006B4B89 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				CC273CF62FB8F45A006B4B89 /* Forget-Me-Not.app */,
+				CC273CF62FB8F45A006B4B89 /* Celmi.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,7 +98,7 @@
 				CC3BBE252FB8F83D00247EB6 /* Algorithms */,
 			);
 			productName = "Forget-Me-Not";
-			productReference = CC273CF62FB8F45A006B4B89 /* Forget-Me-Not.app */;
+			productReference = CC273CF62FB8F45A006B4B89 /* Celmi.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -315,7 +315,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.4;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.transfinite.Forget-Me-Not";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Celmi;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -362,7 +362,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 26.4;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.transfinite.Forget-Me-Not";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Celmi;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
