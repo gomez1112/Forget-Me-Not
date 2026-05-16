@@ -88,15 +88,25 @@ final class ContactsService {
         }
     }
 
-    func fetchImportCandidates(existingPeople: [Person]) throws -> [ImportedPersonCandidate] {
+    func fetchImportCandidates(existingPeople: [Person]) async throws -> [ImportedPersonCandidate] {
         let existingContactIDs = Set(existingPeople.compactMap(\.contactIdentifier))
+        return try await Task.detached(priority: .userInitiated) {
+            try Self.fetchImportCandidates(existingContactIDs: existingContactIDs)
+        }.value
+    }
+
+    nonisolated private static func fetchImportCandidates(
+        existingContactIDs: Set<String>,
+        store: CNContactStore = CNContactStore()
+    ) throws -> [ImportedPersonCandidate] {
         let keys: [CNKeyDescriptor] = [
             CNContactIdentifierKey as CNKeyDescriptor,
             CNContactGivenNameKey as CNKeyDescriptor,
             CNContactFamilyNameKey as CNKeyDescriptor,
             CNContactNicknameKey as CNKeyDescriptor,
             CNContactBirthdayKey as CNKeyDescriptor,
-            CNContactDatesKey as CNKeyDescriptor
+            CNContactDatesKey as CNKeyDescriptor,
+            CNContactFormatter.descriptorForRequiredKeys(for: .fullName)
         ]
         let request = CNContactFetchRequest(keysToFetch: keys)
         var candidates: [ImportedPersonCandidate] = []
@@ -134,7 +144,7 @@ final class ContactsService {
         }
     }
 
-    static func duplicateFreeCandidates(
+    nonisolated static func duplicateFreeCandidates(
         _ candidates: [ImportedPersonCandidate],
         existingPeople: [Person]
     ) -> [ImportedPersonCandidate] {
@@ -142,7 +152,7 @@ final class ContactsService {
         return candidates.filter { !existingContactIDs.contains($0.contactIdentifier) }
     }
 
-    private static func candidate(
+    nonisolated private static func candidate(
         from components: DateComponents,
         title: String,
         type: SpecialDateType

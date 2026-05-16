@@ -47,9 +47,9 @@ final class CelmiModel {
         return state
     }
 
-    func loadContactCandidates(existingPeople: [Person]) {
+    func loadContactCandidates(existingPeople: [Person]) async {
         do {
-            importCandidates = try contactsService.fetchImportCandidates(existingPeople: existingPeople)
+            importCandidates = try await contactsService.fetchImportCandidates(existingPeople: existingPeople)
             lastErrorMessage = nil
         } catch {
             lastErrorMessage = error.localizedDescription

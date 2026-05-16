@@ -44,7 +44,7 @@ struct ImportContactsView: View {
             .task {
                 await model.refreshPermissionStates()
                 if model.contactsPermissionState == .authorized {
-                    model.loadContactCandidates(existingPeople: people)
+                    await model.loadContactCandidates(existingPeople: people)
                 }
             }
         }
@@ -72,7 +72,7 @@ struct ImportContactsView: View {
                     Task {
                         let state = await model.requestContactsPermission()
                         if state == .authorized {
-                            model.loadContactCandidates(existingPeople: people)
+                            await model.loadContactCandidates(existingPeople: people)
                         }
                     }
                 }
@@ -98,12 +98,8 @@ struct ImportContactsView: View {
                     }
                 }
 
-                ForEach(model.importCandidates.indices, id: \.self) { index in
-                    let candidate = model.importCandidates[index]
-                    Toggle(isOn: Binding(
-                        get: { model.importCandidates[index].isSelected },
-                        set: { model.importCandidates[index].isSelected = $0 }
-                    )) {
+                ForEach(model.importCandidates) { candidate in
+                    Toggle(isOn: selectionBinding(for: candidate)) {
                         VStack(alignment: .leading, spacing: 4) {
                             Text(candidate.fullName)
                                 .font(.headline)
@@ -115,6 +111,15 @@ struct ImportContactsView: View {
                     .accessibilityLabel("Import \(candidate.fullName)")
                 }
             }
+        }
+    }
+
+    private func selectionBinding(for candidate: ImportedPersonCandidate) -> Binding<Bool> {
+        Binding {
+            model.importCandidates.first { $0.id == candidate.id }?.isSelected ?? false
+        } set: { isSelected in
+            guard let index = model.importCandidates.firstIndex(where: { $0.id == candidate.id }) else { return }
+            model.importCandidates[index].isSelected = isSelected
         }
     }
 }
