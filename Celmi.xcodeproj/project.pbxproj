@@ -11,6 +11,7 @@
 		CC3BBE1D2FB8F80800247EB6 /* OnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = CC3BBE1C2FB8F80800247EB6 /* OnboardingKit */; };
 		CC3BBE202FB8F81600247EB6 /* EZSwiftData in Frameworks */ = {isa = PBXBuildFile; productRef = CC3BBE1F2FB8F81600247EB6 /* EZSwiftData */; };
 		CC3BBE232FB8F82600247EB6 /* FlexStore in Frameworks */ = {isa = PBXBuildFile; productRef = CC3BBE222FB8F82600247EB6 /* FlexStore */; };
+		CC4C00012FB9000000247EB6 /* CelmiWidgetExtension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = CC4C00032FB9000000247EB6 /* CelmiWidgetExtension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -19,37 +20,61 @@
 			containerPortal = CC273CEE2FB8F45A006B4B89 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = CC273CF52FB8F45A006B4B89;
-			remoteInfo = "Forget-Me-Not";
+			remoteInfo = Celmi;
+		};
+		CC4C00022FB9000000247EB6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CC273CEE2FB8F45A006B4B89 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CC4C00082FB9000000247EB6;
+			remoteInfo = CelmiWidgetExtension;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		CC273CF62FB8F45A006B4B89 /* Celmi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Celmi.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CC3BBE2B2FB8FF0500247EB6 /* CelmiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CelmiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC4C00032FB9000000247EB6 /* CelmiWidgetExtension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = CelmiWidgetExtension.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		CC3BBE172FB8F77C00247EB6 /* Exceptions for "Forget-Me-Not" folder in "Forget-Me-Not" target */ = {
+		CC3BBE172FB8F77C00247EB6 /* Exceptions for "Celmi" folder in "Celmi" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = CC273CF52FB8F45A006B4B89 /* Forget-Me-Not */;
+			target = CC273CF52FB8F45A006B4B89 /* Celmi */;
+		};
+		CC4C00042FB9000000247EB6 /* Exceptions for "CelmiWidgetExtension" folder in "CelmiWidgetExtension" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				CelmiWidgetExtension.entitlements,
+				Info.plist,
+			);
+			target = CC4C00082FB9000000247EB6 /* CelmiWidgetExtension */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		CC273CF82FB8F45A006B4B89 /* Forget-Me-Not */ = {
+		CC273CF82FB8F45A006B4B89 /* Celmi */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				CC3BBE172FB8F77C00247EB6 /* Exceptions for "Forget-Me-Not" folder in "Forget-Me-Not" target */,
+				CC3BBE172FB8F77C00247EB6 /* Exceptions for "Celmi" folder in "Celmi" target */,
 			);
-			path = "Forget-Me-Not";
+			path = Celmi;
 			sourceTree = "<group>";
 		};
 		CC3BBE2C2FB8FF0500247EB6 /* CelmiTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = CelmiTests;
+			sourceTree = "<group>";
+		};
+		CC4C00052FB9000000247EB6 /* CelmiWidgetExtension */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CC4C00042FB9000000247EB6 /* Exceptions for "CelmiWidgetExtension" folder in "CelmiWidgetExtension" target */,
+			);
+			path = CelmiWidgetExtension;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -73,14 +98,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC4C00062FB9000000247EB6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		CC273CED2FB8F45A006B4B89 = {
 			isa = PBXGroup;
 			children = (
-				CC273CF82FB8F45A006B4B89 /* Forget-Me-Not */,
+				CC273CF82FB8F45A006B4B89 /* Celmi */,
 				CC3BBE2C2FB8FF0500247EB6 /* CelmiTests */,
+				CC4C00052FB9000000247EB6 /* CelmiWidgetExtension */,
 				CC273CF72FB8F45A006B4B89 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +123,7 @@
 			children = (
 				CC273CF62FB8F45A006B4B89 /* Celmi.app */,
 				CC3BBE2B2FB8FF0500247EB6 /* CelmiTests.xctest */,
+				CC4C00032FB9000000247EB6 /* CelmiWidgetExtension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -97,29 +131,31 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		CC273CF52FB8F45A006B4B89 /* Forget-Me-Not */ = {
+		CC273CF52FB8F45A006B4B89 /* Celmi */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = CC273D012FB8F45B006B4B89 /* Build configuration list for PBXNativeTarget "Forget-Me-Not" */;
+			buildConfigurationList = CC273D012FB8F45B006B4B89 /* Build configuration list for PBXNativeTarget "Celmi" */;
 			buildPhases = (
 				CC273CF22FB8F45A006B4B89 /* Sources */,
 				CC273CF32FB8F45A006B4B89 /* Frameworks */,
 				CC273CF42FB8F45A006B4B89 /* Resources */,
+				CC4C00072FB9000000247EB6 /* Embed App Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				CC4C000B2FB9000000247EB6 /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
-				CC273CF82FB8F45A006B4B89 /* Forget-Me-Not */,
+				CC273CF82FB8F45A006B4B89 /* Celmi */,
 			);
-			name = "Forget-Me-Not";
+			name = Celmi;
 			packageProductDependencies = (
 				CC3BBE192FB8F7F600247EB6 /* GentleNotification */,
 				CC3BBE1C2FB8F80800247EB6 /* OnboardingKit */,
 				CC3BBE1F2FB8F81600247EB6 /* EZSwiftData */,
 				CC3BBE222FB8F82600247EB6 /* FlexStore */,
 			);
-			productName = "Forget-Me-Not";
+			productName = Celmi;
 			productReference = CC273CF62FB8F45A006B4B89 /* Celmi.app */;
 			productType = "com.apple.product-type.application";
 		};
@@ -146,6 +182,28 @@
 			productReference = CC3BBE2B2FB8FF0500247EB6 /* CelmiTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
+		CC4C00082FB9000000247EB6 /* CelmiWidgetExtension */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC4C000E2FB9000000247EB6 /* Build configuration list for PBXNativeTarget "CelmiWidgetExtension" */;
+			buildPhases = (
+				CC4C000A2FB9000000247EB6 /* Sources */,
+				CC4C00062FB9000000247EB6 /* Frameworks */,
+				CC4C00092FB9000000247EB6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				CC4C00052FB9000000247EB6 /* CelmiWidgetExtension */,
+			);
+			name = CelmiWidgetExtension;
+			packageProductDependencies = (
+			);
+			productName = CelmiWidgetExtension;
+			productReference = CC4C00032FB9000000247EB6 /* CelmiWidgetExtension.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -163,9 +221,12 @@
 						CreatedOnToolsVersion = 26.5;
 						TestTargetID = CC273CF52FB8F45A006B4B89;
 					};
+					CC4C00082FB9000000247EB6 = {
+						CreatedOnToolsVersion = 26.5;
+					};
 				};
 			};
-			buildConfigurationList = CC273CF12FB8F45A006B4B89 /* Build configuration list for PBXProject "Forget-Me-Not" */;
+			buildConfigurationList = CC273CF12FB8F45A006B4B89 /* Build configuration list for PBXProject "Celmi" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -185,11 +246,26 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				CC273CF52FB8F45A006B4B89 /* Forget-Me-Not */,
+				CC273CF52FB8F45A006B4B89 /* Celmi */,
 				CC3BBE2A2FB8FF0500247EB6 /* CelmiTests */,
+				CC4C00082FB9000000247EB6 /* CelmiWidgetExtension */,
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		CC4C00072FB9000000247EB6 /* Embed App Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				CC4C00012FB9000000247EB6 /* CelmiWidgetExtension.appex in Embed App Extensions */,
+			);
+			name = "Embed App Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CC273CF42FB8F45A006B4B89 /* Resources */ = {
@@ -200,6 +276,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		CC3BBE292FB8FF0500247EB6 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC4C00092FB9000000247EB6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -223,13 +306,25 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC4C000A2FB9000000247EB6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
 		CC3BBE302FB8FF0500247EB6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = CC273CF52FB8F45A006B4B89 /* Forget-Me-Not */;
+			target = CC273CF52FB8F45A006B4B89 /* Celmi */;
 			targetProxy = CC3BBE2F2FB8FF0500247EB6 /* PBXContainerItemProxy */;
+		};
+		CC4C000B2FB9000000247EB6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CC4C00082FB9000000247EB6 /* CelmiWidgetExtension */;
+			targetProxy = CC4C00022FB9000000247EB6 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -359,7 +454,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Forget-Me-Not/Forget-Me-Not.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Celmi/Celmi.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -369,7 +464,8 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Forget-Me-Not/Info.plist";
+				INFOPLIST_FILE = Celmi/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Celmi;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -381,12 +477,12 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				MACOSX_DEPLOYMENT_TARGET = 26.4;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.transfinite.Forget-Me-Not";
+				PRODUCT_BUNDLE_IDENTIFIER = com.transfinite.Celmi;
 				PRODUCT_NAME = Celmi;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -408,7 +504,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "Forget-Me-Not/Forget-Me-Not.entitlements";
+				CODE_SIGN_ENTITLEMENTS = Celmi/Celmi.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
@@ -418,7 +514,8 @@
 				ENABLE_PREVIEWS = YES;
 				ENABLE_USER_SELECTED_FILES = readonly;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "Forget-Me-Not/Info.plist";
+				INFOPLIST_FILE = Celmi/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Celmi;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.lifestyle";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphonesimulator*]" = YES;
@@ -430,12 +527,12 @@
 				"INFOPLIST_KEY_UIStatusBarStyle[sdk=iphonesimulator*]" = UIStatusBarStyleDefault;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/Frameworks";
 				"LD_RUNPATH_SEARCH_PATHS[sdk=macosx*]" = "@executable_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				MACOSX_DEPLOYMENT_TARGET = 26.4;
 				MARKETING_VERSION = 1.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.transfinite.Forget-Me-Not";
+				PRODUCT_BUNDLE_IDENTIFIER = com.transfinite.Celmi;
 				PRODUCT_NAME = Celmi;
 				REGISTER_APP_GROUPS = YES;
 				SDKROOT = auto;
@@ -463,8 +560,8 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_OUTGOING_NETWORK_CONNECTIONS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
-				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.4;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.transfinite.CelmiTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -476,9 +573,10 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Celmi.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Celmi";
 			};
@@ -492,8 +590,8 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 88QL9VPLMY;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
-				MACOSX_DEPLOYMENT_TARGET = 26.5;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.4;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.transfinite.CelmiTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -504,11 +602,71 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Celmi.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Celmi";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		CC4C000C2FB9000000247EB6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = CelmiWidgetExtension/CelmiWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 88QL9VPLMY;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CelmiWidgetExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.transfinite.Celmi.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		CC4C000D2FB9000000247EB6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
+				CODE_SIGN_ENTITLEMENTS = CelmiWidgetExtension/CelmiWidgetExtension.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 88QL9VPLMY;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CelmiWidgetExtension/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 26.4;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.transfinite.Celmi.widget;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = auto;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
+				SUPPORTS_MACCATALYST = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 6.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -516,7 +674,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		CC273CF12FB8F45A006B4B89 /* Build configuration list for PBXProject "Forget-Me-Not" */ = {
+		CC273CF12FB8F45A006B4B89 /* Build configuration list for PBXProject "Celmi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CC273CFF2FB8F45B006B4B89 /* Debug */,
@@ -525,7 +683,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		CC273D012FB8F45B006B4B89 /* Build configuration list for PBXNativeTarget "Forget-Me-Not" */ = {
+		CC273D012FB8F45B006B4B89 /* Build configuration list for PBXNativeTarget "Celmi" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				CC273D022FB8F45B006B4B89 /* Debug */,
@@ -539,6 +697,15 @@
 			buildConfigurations = (
 				CC3BBE322FB8FF0500247EB6 /* Debug */,
 				CC3BBE332FB8FF0500247EB6 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CC4C000E2FB9000000247EB6 /* Build configuration list for PBXNativeTarget "CelmiWidgetExtension" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC4C000C2FB9000000247EB6 /* Debug */,
+				CC4C000D2FB9000000247EB6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
