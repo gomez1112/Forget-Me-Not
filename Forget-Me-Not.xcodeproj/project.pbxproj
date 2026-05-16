@@ -13,8 +13,19 @@
 		CC3BBE232FB8F82600247EB6 /* FlexStore in Frameworks */ = {isa = PBXBuildFile; productRef = CC3BBE222FB8F82600247EB6 /* FlexStore */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		CC3BBE2F2FB8FF0500247EB6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CC273CEE2FB8F45A006B4B89 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CC273CF52FB8F45A006B4B89;
+			remoteInfo = "Forget-Me-Not";
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		CC273CF62FB8F45A006B4B89 /* Celmi.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Celmi.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC3BBE2B2FB8FF0500247EB6 /* CelmiTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CelmiTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +47,11 @@
 			path = "Forget-Me-Not";
 			sourceTree = "<group>";
 		};
+		CC3BBE2C2FB8FF0500247EB6 /* CelmiTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CelmiTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -50,6 +66,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC3BBE282FB8FF0500247EB6 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -57,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				CC273CF82FB8F45A006B4B89 /* Forget-Me-Not */,
+				CC3BBE2C2FB8FF0500247EB6 /* CelmiTests */,
 				CC273CF72FB8F45A006B4B89 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -65,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				CC273CF62FB8F45A006B4B89 /* Celmi.app */,
+				CC3BBE2B2FB8FF0500247EB6 /* CelmiTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -98,6 +123,29 @@
 			productReference = CC273CF62FB8F45A006B4B89 /* Celmi.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CC3BBE2A2FB8FF0500247EB6 /* CelmiTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC3BBE312FB8FF0500247EB6 /* Build configuration list for PBXNativeTarget "CelmiTests" */;
+			buildPhases = (
+				CC3BBE272FB8FF0500247EB6 /* Sources */,
+				CC3BBE282FB8FF0500247EB6 /* Frameworks */,
+				CC3BBE292FB8FF0500247EB6 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CC3BBE302FB8FF0500247EB6 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CC3BBE2C2FB8FF0500247EB6 /* CelmiTests */,
+			);
+			name = CelmiTests;
+			packageProductDependencies = (
+			);
+			productName = CelmiTests;
+			productReference = CC3BBE2B2FB8FF0500247EB6 /* CelmiTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -105,11 +153,15 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
-				LastSwiftUpdateCheck = 2640;
+				LastSwiftUpdateCheck = 2650;
 				LastUpgradeCheck = 2650;
 				TargetAttributes = {
 					CC273CF52FB8F45A006B4B89 = {
 						CreatedOnToolsVersion = 26.4.1;
+					};
+					CC3BBE2A2FB8FF0500247EB6 = {
+						CreatedOnToolsVersion = 26.5;
+						TestTargetID = CC273CF52FB8F45A006B4B89;
 					};
 				};
 			};
@@ -134,12 +186,20 @@
 			projectRoot = "";
 			targets = (
 				CC273CF52FB8F45A006B4B89 /* Forget-Me-Not */,
+				CC3BBE2A2FB8FF0500247EB6 /* CelmiTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		CC273CF42FB8F45A006B4B89 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC3BBE292FB8FF0500247EB6 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -156,7 +216,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC3BBE272FB8FF0500247EB6 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		CC3BBE302FB8FF0500247EB6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CC273CF52FB8F45A006B4B89 /* Forget-Me-Not */;
+			targetProxy = CC3BBE2F2FB8FF0500247EB6 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		CC273CFF2FB8F45B006B4B89 /* Debug */ = {
@@ -377,6 +452,53 @@
 			};
 			name = Release;
 		};
+		CC3BBE322FB8FF0500247EB6 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 88QL9VPLMY;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.transfinite.CelmiTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Celmi.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Celmi";
+			};
+			name = Debug;
+		};
+		CC3BBE332FB8FF0500247EB6 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 88QL9VPLMY;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.transfinite.CelmiTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Celmi.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Celmi";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -394,6 +516,15 @@
 			buildConfigurations = (
 				CC273D022FB8F45B006B4B89 /* Debug */,
 				CC273D032FB8F45B006B4B89 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CC3BBE312FB8FF0500247EB6 /* Build configuration list for PBXNativeTarget "CelmiTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC3BBE322FB8FF0500247EB6 /* Debug */,
+				CC3BBE332FB8FF0500247EB6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
