@@ -6,6 +6,14 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		CC3BBE1A2FB8F7F600247EB6 /* GentleNotification in Frameworks */ = {isa = PBXBuildFile; productRef = CC3BBE192FB8F7F600247EB6 /* GentleNotification */; };
+		CC3BBE1D2FB8F80800247EB6 /* OnboardingKit in Frameworks */ = {isa = PBXBuildFile; productRef = CC3BBE1C2FB8F80800247EB6 /* OnboardingKit */; };
+		CC3BBE202FB8F81600247EB6 /* EZSwiftData in Frameworks */ = {isa = PBXBuildFile; productRef = CC3BBE1F2FB8F81600247EB6 /* EZSwiftData */; };
+		CC3BBE232FB8F82600247EB6 /* FlexStore in Frameworks */ = {isa = PBXBuildFile; productRef = CC3BBE222FB8F82600247EB6 /* FlexStore */; };
+		CC3BBE262FB8F83D00247EB6 /* Algorithms in Frameworks */ = {isa = PBXBuildFile; productRef = CC3BBE252FB8F83D00247EB6 /* Algorithms */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		CC273CF62FB8F45A006B4B89 /* Forget-Me-Not.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Forget-Me-Not.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +44,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC3BBE1D2FB8F80800247EB6 /* OnboardingKit in Frameworks */,
+				CC3BBE232FB8F82600247EB6 /* FlexStore in Frameworks */,
+				CC3BBE202FB8F81600247EB6 /* EZSwiftData in Frameworks */,
+				CC3BBE262FB8F83D00247EB6 /* Algorithms in Frameworks */,
+				CC3BBE1A2FB8F7F600247EB6 /* GentleNotification in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +91,11 @@
 			);
 			name = "Forget-Me-Not";
 			packageProductDependencies = (
+				CC3BBE192FB8F7F600247EB6 /* GentleNotification */,
+				CC3BBE1C2FB8F80800247EB6 /* OnboardingKit */,
+				CC3BBE1F2FB8F81600247EB6 /* EZSwiftData */,
+				CC3BBE222FB8F82600247EB6 /* FlexStore */,
+				CC3BBE252FB8F83D00247EB6 /* Algorithms */,
 			);
 			productName = "Forget-Me-Not";
 			productReference = CC273CF62FB8F45A006B4B89 /* Forget-Me-Not.app */;
@@ -107,6 +125,13 @@
 			);
 			mainGroup = CC273CED2FB8F45A006B4B89;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				CC3BBE182FB8F7F600247EB6 /* XCRemoteSwiftPackageReference "GentleNotification" */,
+				CC3BBE1B2FB8F80800247EB6 /* XCRemoteSwiftPackageReference "OnboardingKit" */,
+				CC3BBE1E2FB8F81600247EB6 /* XCRemoteSwiftPackageReference "EZSwiftData" */,
+				CC3BBE212FB8F82600247EB6 /* XCRemoteSwiftPackageReference "FlexStore" */,
+				CC3BBE242FB8F83D00247EB6 /* XCRemoteSwiftPackageReference "swift-algorithms" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = CC273CF72FB8F45A006B4B89 /* Products */;
 			projectDirPath = "";
@@ -374,6 +399,77 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		CC3BBE182FB8F7F600247EB6 /* XCRemoteSwiftPackageReference "GentleNotification" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gomez1112/GentleNotification";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
+		CC3BBE1B2FB8F80800247EB6 /* XCRemoteSwiftPackageReference "OnboardingKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gomez1112/OnboardingKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+		CC3BBE1E2FB8F81600247EB6 /* XCRemoteSwiftPackageReference "EZSwiftData" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gomez1112/EZSwiftData";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
+		CC3BBE212FB8F82600247EB6 /* XCRemoteSwiftPackageReference "FlexStore" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/gomez1112/FlexStore";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.1;
+			};
+		};
+		CC3BBE242FB8F83D00247EB6 /* XCRemoteSwiftPackageReference "swift-algorithms" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-algorithms.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		CC3BBE192FB8F7F600247EB6 /* GentleNotification */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC3BBE182FB8F7F600247EB6 /* XCRemoteSwiftPackageReference "GentleNotification" */;
+			productName = GentleNotification;
+		};
+		CC3BBE1C2FB8F80800247EB6 /* OnboardingKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC3BBE1B2FB8F80800247EB6 /* XCRemoteSwiftPackageReference "OnboardingKit" */;
+			productName = OnboardingKit;
+		};
+		CC3BBE1F2FB8F81600247EB6 /* EZSwiftData */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC3BBE1E2FB8F81600247EB6 /* XCRemoteSwiftPackageReference "EZSwiftData" */;
+			productName = EZSwiftData;
+		};
+		CC3BBE222FB8F82600247EB6 /* FlexStore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC3BBE212FB8F82600247EB6 /* XCRemoteSwiftPackageReference "FlexStore" */;
+			productName = FlexStore;
+		};
+		CC3BBE252FB8F83D00247EB6 /* Algorithms */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = CC3BBE242FB8F83D00247EB6 /* XCRemoteSwiftPackageReference "swift-algorithms" */;
+			productName = Algorithms;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = CC273CEE2FB8F45A006B4B89 /* Project object */;
 }

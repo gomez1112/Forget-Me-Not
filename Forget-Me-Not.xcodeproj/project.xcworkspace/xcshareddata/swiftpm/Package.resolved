@@ -1,0 +1,60 @@
+{
+  "originHash" : "fbb67fe8d38ca86b529da262efc98419fb0242c3bee47b8cde4ea7353c291915",
+  "pins" : [
+    {
+      "identity" : "ezswiftdata",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gomez1112/EZSwiftData",
+      "state" : {
+        "revision" : "04ff515c6b579b9035d936c28e28728be44ce583",
+        "version" : "1.1.2"
+      }
+    },
+    {
+      "identity" : "flexstore",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gomez1112/FlexStore",
+      "state" : {
+        "revision" : "27338bd0020b216c74a011a4fb520784ae392a1c",
+        "version" : "1.2.0"
+      }
+    },
+    {
+      "identity" : "gentlenotification",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gomez1112/GentleNotification",
+      "state" : {
+        "branch" : "main",
+        "revision" : "3c8aa7bbc623d871c227ca9ad3bf14fa24628eea"
+      }
+    },
+    {
+      "identity" : "onboardingkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gomez1112/OnboardingKit",
+      "state" : {
+        "revision" : "0280550b784f1097b5b452b72cb238ab3be5a84e",
+        "version" : "1.2.2"
+      }
+    },
+    {
+      "identity" : "swift-algorithms",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-algorithms.git",
+      "state" : {
+        "revision" : "87e50f483c54e6efd60e885f7f5aa946cee68023",
+        "version" : "1.2.1"
+      }
+    },
+    {
+      "identity" : "swift-numerics",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/apple/swift-numerics.git",
+      "state" : {
+        "revision" : "0c0290ff6b24942dadb83a929ffaaa1481df04a2",
+        "version" : "1.1.1"
+      }
+    }
+  ],
+  "version" : 3
+}
