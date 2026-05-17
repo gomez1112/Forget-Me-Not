@@ -2,14 +2,11 @@ import SwiftData
 import SwiftUI
 
 struct DashboardView: View {
-    @Environment(CelmiModel.self) private var model
-    @Environment(EntitlementService.self) private var entitlementService
     @Query(sort: \Person.fullName) private var people: [Person]
     @Bindable var settings: AppSettings
 
     @State private var showingAddPerson = false
     @State private var showingImport = false
-    @State private var showingPaywall = false
 
     private var events: [SpecialDateEvent] {
         SpecialDateEvent.events(for: people)
@@ -22,10 +19,8 @@ struct DashboardView: View {
 
                 if let nextEvent = events.first {
                     NextCelebrationCard(event: nextEvent)
-                    quickActions
                     dashboardStats
                 } else {
-                    quickActions
                     DashboardEmptyStateCard()
                     dashboardStats
                 }
@@ -40,9 +35,21 @@ struct DashboardView: View {
         .celmiScreenBackground()
         .toolbar {
             ToolbarItem(placement: .primaryAction) {
-                Button("Add Person", systemImage: "plus") {
-                    showingAddPerson = true
+                Button(action: showImport) {
+                    Label("Import from Contacts", systemImage: "person.crop.circle.badge.plus")
                 }
+                .labelStyle(.iconOnly)
+                .help("Import from Contacts")
+                .accessibilityLabel("Import from Contacts")
+                .accessibilityIdentifier("dashboard.import")
+            }
+
+            ToolbarItem(placement: .primaryAction) {
+                Button(action: showAddPerson) {
+                    Label("Add Person", systemImage: "plus")
+                }
+                .labelStyle(.iconOnly)
+                .help("Add Person")
                 .accessibilityLabel("Add Person")
                 .accessibilityIdentifier("dashboard.addPerson")
             }
@@ -53,9 +60,14 @@ struct DashboardView: View {
         .sheet(isPresented: $showingImport) {
             ImportContactsView(settings: settings)
         }
-        .sheet(isPresented: $showingPaywall) {
-            PaywallView()
-        }
+    }
+
+    private func showAddPerson() {
+        showingAddPerson = true
+    }
+
+    private func showImport() {
+        showingImport = true
     }
 
     private var header: some View {
@@ -79,43 +91,6 @@ struct DashboardView: View {
             StatCard(title: "Today", value: todayCount, systemImage: "sun.max")
             StatCard(title: "This Week", value: weekCount, systemImage: "calendar")
             StatCard(title: "This Month", value: monthCount, systemImage: "sparkles")
-        }
-    }
-
-    private var quickActions: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text("Quick Actions")
-                .font(.headline)
-                .foregroundStyle(CelmiDesign.deepPlum)
-
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 12) {
-                    QuickActionCard(title: "Import from Contacts", systemImage: "person.crop.circle.badge.plus") {
-                        showingImport = true
-                    }
-                    .frame(width: 172)
-
-                    QuickActionCard(title: "Add Person", systemImage: "plus.circle") {
-                        showingAddPerson = true
-                    }
-                    .frame(width: 172)
-
-                    QuickActionCard(title: "Review Notifications", systemImage: "bell.badge") {
-                        Task {
-                            await model.requestNotificationPermission()
-                        }
-                    }
-                    .frame(width: 172)
-
-                    if !entitlementService.isPro {
-                        QuickActionCard(title: "Upgrade to Pro", systemImage: "crown") {
-                            showingPaywall = true
-                        }
-                        .frame(width: 172)
-                    }
-                }
-                .padding(.vertical, 2)
-            }
         }
     }
 
@@ -211,23 +186,5 @@ private struct StatCard: View {
         .celmiCard(cornerRadius: 22)
         .accessibilityElement(children: .combine)
         .accessibilityLabel("\(title): \(value)")
-    }
-}
-
-private struct QuickActionCard: View {
-    let title: String
-    let systemImage: String
-    let action: () -> Void
-
-    var body: some View {
-        Button(action: action) {
-            Label(title, systemImage: systemImage)
-                .font(.headline)
-                .frame(maxWidth: .infinity, minHeight: 56, alignment: .leading)
-        }
-        .buttonStyle(.plain)
-        .foregroundStyle(CelmiDesign.deepPlum)
-        .celmiCard(cornerRadius: 22)
-        .accessibilityLabel(title)
     }
 }
