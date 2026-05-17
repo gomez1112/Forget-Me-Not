@@ -1,9 +1,11 @@
+import Foundation
 import SwiftData
 import SwiftUI
 
 struct RootView: View {
     @Environment(\.modelContext) private var modelContext
     @Query private var settings: [AppSettings]
+    @State private var showingLaunchPaywall = ProcessInfo.processInfo.arguments.contains("--show-paywall")
 
     var body: some View {
         Group {
@@ -20,6 +22,9 @@ struct RootView: View {
                         try? modelContext.save()
                     }
             }
+        }
+        .sheet(isPresented: $showingLaunchPaywall) {
+            PaywallView()
         }
     }
 }

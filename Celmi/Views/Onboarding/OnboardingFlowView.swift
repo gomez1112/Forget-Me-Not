@@ -6,8 +6,7 @@ struct OnboardingFlowView: View {
     @Bindable var settings: AppSettings
 
     var body: some View {
-        PagedOnboardingView(
-            appName: CelmiConstants.appName,
+        CelmiOnboardingPager(
             pages: pages,
             tintColor: CelmiDesign.rose
         ) {
@@ -70,5 +69,220 @@ struct OnboardingFlowView: View {
                 iconColor: CelmiDesign.gold
             )
         ]
+    }
+}
+
+private struct CelmiOnboardingPager: View {
+    let pages: [OnboardingPage]
+    let tintColor: Color
+    let onFinish: @MainActor @Sendable () -> Void
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var currentPage = 0
+
+    var body: some View {
+        ZStack {
+            (currentPageData?.backgroundColor ?? CelmiDesign.background)
+                .ignoresSafeArea()
+
+            if pages.isEmpty {
+                emptyState
+            } else {
+                pageContent
+            }
+        }
+        .safeAreaInset(edge: .top) {
+            HStack {
+                Spacer()
+                if currentPage < pages.count - 1 {
+                    Button("Skip") {
+                        finish()
+                    }
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(tintColor)
+                    .buttonStyle(.plain)
+                    .padding(.horizontal, 18)
+                    .padding(.vertical, 12)
+                    .accessibilityLabel("Skip onboarding")
+                }
+            }
+            .padding(.horizontal, 8)
+        }
+        .safeAreaInset(edge: .bottom) {
+            controls
+                .padding(.horizontal, 24)
+                .padding(.bottom, 18)
+                .background(currentPageData?.backgroundColor ?? CelmiDesign.background)
+        }
+#if os(iOS)
+        .interactiveDismissDisabled()
+#endif
+    }
+
+    @ViewBuilder
+    private var pageContent: some View {
+#if os(iOS)
+        TabView(selection: $currentPage) {
+            ForEach(Array(pages.enumerated()), id: \.element.id) { index, page in
+                onboardingPage(page)
+                    .tag(index)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+#else
+        onboardingPage(currentPageData)
+#endif
+    }
+
+    private var controls: some View {
+        VStack(spacing: 16) {
+            indicators
+
+            Button {
+                handlePrimaryAction()
+            } label: {
+                Text(primaryButtonTitle)
+                    .font(.headline.weight(.bold))
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: 520)
+                    .frame(minHeight: 50)
+                    .background(tintColor, in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(primaryButtonTitle)
+
+            if let secondaryTitle = currentPageData?.secondaryActionButtonTitle {
+                Button {
+                    handleSecondaryAction()
+                } label: {
+                    Text(secondaryTitle)
+                        .font(.subheadline.weight(.semibold))
+                        .foregroundStyle(tintColor)
+                        .frame(maxWidth: 520)
+                        .frame(minHeight: 44)
+                }
+                .buttonStyle(.plain)
+                .accessibilityLabel(secondaryTitle)
+            }
+        }
+    }
+
+    private var indicators: some View {
+        HStack(spacing: 8) {
+            ForEach(pages.indices, id: \.self) { index in
+                Circle()
+                    .fill(currentPage == index ? tintColor : Color.secondary.opacity(0.34))
+                    .frame(width: currentPage == index ? 18 : 8, height: 8)
+                    .animation(reduceMotion ? nil : .snappy(duration: 0.24), value: currentPage)
+                    .accessibilityHidden(true)
+            }
+        }
+    }
+
+    private var emptyState: some View {
+        CelmiEmptyStateView(
+            title: "Welcome to Celmi",
+            message: "A private, beautiful place to remember the people who matter most.",
+            systemImage: "heart.text.square"
+        )
+    }
+
+    private var primaryButtonTitle: String {
+        guard let page = currentPageData else { return "Continue" }
+        if let actionButtonTitle = page.actionButtonTitle {
+            return actionButtonTitle
+        }
+        return currentPage == pages.count - 1 ? "Start Celmi" : "Next"
+    }
+
+    private var currentPageData: OnboardingPage? {
+        guard pages.indices.contains(currentPage) else { return nil }
+        return pages[currentPage]
+    }
+
+    @MainActor
+    private func handlePrimaryAction() {
+        currentPageData?.action?()
+        advanceOrFinish()
+    }
+
+    @MainActor
+    private func handleSecondaryAction() {
+        currentPageData?.secondaryAction?()
+        advanceOrFinish()
+    }
+
+    @MainActor
+    private func advanceOrFinish() {
+        if currentPage < pages.count - 1 {
+            if reduceMotion {
+                currentPage += 1
+            } else {
+                withAnimation(.snappy(duration: 0.28)) {
+                    currentPage += 1
+                }
+            }
+        } else {
+            finish()
+        }
+    }
+
+    @MainActor
+    private func finish() {
+        onFinish()
+    }
+
+    @ViewBuilder
+    private func onboardingPage(_ page: OnboardingPage?) -> some View {
+        if let page {
+            VStack(spacing: 28) {
+                Spacer(minLength: 28)
+
+                icon(for: page)
+                    .frame(width: 112, height: 112)
+                    .background(.white.opacity(0.62), in: Circle())
+                    .overlay {
+                        Circle()
+                            .stroke(.white.opacity(0.72), lineWidth: 1)
+                    }
+                    .shadow(color: (page.iconColor ?? tintColor).opacity(0.16), radius: 28, y: 14)
+                    .accessibilityHidden(true)
+
+                VStack(spacing: 14) {
+                    Text(page.title)
+                        .font(.largeTitle.weight(.bold))
+                        .foregroundStyle(CelmiDesign.deepPlum)
+                        .multilineTextAlignment(.center)
+                        .minimumScaleFactor(0.78)
+
+                    Text(page.description)
+                        .font(.title3)
+                        .foregroundStyle(.secondary)
+                        .multilineTextAlignment(.center)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .frame(maxWidth: 560)
+                }
+
+                Spacer(minLength: 120)
+            }
+            .padding(.horizontal, 28)
+            .accessibilityElement(children: .combine)
+        }
+    }
+
+    @ViewBuilder
+    private func icon(for page: OnboardingPage) -> some View {
+        switch page.icon {
+        case .system(let systemImage):
+            Image(systemName: systemImage)
+                .font(.system(size: 48, weight: .semibold))
+                .foregroundStyle(page.iconColor ?? tintColor)
+                .symbolRenderingMode(.hierarchical)
+        case .asset(let image):
+            Image(image)
+                .resizable()
+                .scaledToFit()
+                .padding(26)
+        }
     }
 }

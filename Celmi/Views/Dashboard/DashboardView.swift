@@ -2,6 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct DashboardView: View {
+    @Environment(CelmiModel.self) private var model
     @Environment(EntitlementService.self) private var entitlementService
     @Query(sort: \Person.fullName) private var people: [Person]
     @Bindable var settings: AppSettings
@@ -21,16 +22,13 @@ struct DashboardView: View {
 
                 if let nextEvent = events.first {
                     NextCelebrationCard(event: nextEvent)
+                    quickActions
+                    dashboardStats
                 } else {
-                    CelmiEmptyStateView(
-                        title: "Your inner circle is waiting.",
-                        message: "Import birthdays from Contacts or add someone manually.",
-                        systemImage: "person.2.wave.2"
-                    )
+                    quickActions
+                    DashboardEmptyStateCard()
+                    dashboardStats
                 }
-
-                dashboardStats
-                quickActions
 
                 if !events.prefix(5).isEmpty {
                     weekPreview
@@ -38,6 +36,7 @@ struct DashboardView: View {
             }
             .padding()
         }
+        .celmiTabContentClearance()
         .navigationTitle("Today")
         .celmiScreenBackground()
         .toolbar {
@@ -45,6 +44,8 @@ struct DashboardView: View {
                 Button("Add Person", systemImage: "plus") {
                     showingAddPerson = true
                 }
+                .accessibilityLabel("Add Person")
+                .accessibilityIdentifier("dashboard.addPerson")
             }
         }
         .sheet(isPresented: $showingAddPerson) {
@@ -88,21 +89,33 @@ struct DashboardView: View {
                 .font(.headline)
                 .foregroundStyle(CelmiDesign.deepPlum)
 
-            LazyVGrid(columns: [GridItem(.adaptive(minimum: 160), spacing: 12)], spacing: 12) {
-                QuickActionCard(title: "Import from Contacts", systemImage: "person.crop.circle.badge.plus") {
-                    showingImport = true
-                }
-                QuickActionCard(title: "Add Person", systemImage: "plus.circle") {
-                    showingAddPerson = true
-                }
-                QuickActionCard(title: "Review Notifications", systemImage: "bell.badge") {
-                    showingImport = false
-                }
-                if !entitlementService.isPro {
-                    QuickActionCard(title: "Upgrade to Pro", systemImage: "crown") {
-                        showingPaywall = true
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 12) {
+                    QuickActionCard(title: "Import from Contacts", systemImage: "person.crop.circle.badge.plus") {
+                        showingImport = true
+                    }
+                    .frame(width: 172)
+
+                    QuickActionCard(title: "Add Person", systemImage: "plus.circle") {
+                        showingAddPerson = true
+                    }
+                    .frame(width: 172)
+
+                    QuickActionCard(title: "Review Notifications", systemImage: "bell.badge") {
+                        Task {
+                            await model.requestNotificationPermission()
+                        }
+                    }
+                    .frame(width: 172)
+
+                    if !entitlementService.isPro {
+                        QuickActionCard(title: "Upgrade to Pro", systemImage: "crown") {
+                            showingPaywall = true
+                        }
+                        .frame(width: 172)
                     }
                 }
+                .padding(.vertical, 2)
             }
         }
     }
@@ -118,6 +131,32 @@ struct DashboardView: View {
                     .celmiCard(cornerRadius: 22)
             }
         }
+    }
+}
+
+private struct DashboardEmptyStateCard: View {
+    var body: some View {
+        HStack(spacing: 16) {
+            Image(systemName: "person.2.wave.2")
+                .font(.title2.weight(.semibold))
+                .foregroundStyle(CelmiDesign.rose)
+                .frame(width: 48, height: 48)
+                .background(CelmiDesign.rose.opacity(0.12), in: Circle())
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("Your inner circle is waiting.")
+                    .font(.headline)
+                    .foregroundStyle(CelmiDesign.deepPlum)
+                Text("Import birthdays from Contacts or add someone manually.")
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .celmiCard(cornerRadius: 24)
+        .accessibilityElement(children: .combine)
     }
 }
 

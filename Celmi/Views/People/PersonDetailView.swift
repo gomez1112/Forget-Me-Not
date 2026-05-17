@@ -11,11 +11,14 @@ struct PersonDetailView: View {
 
     @State private var showingEdit = false
     @State private var showingDeleteConfirmation = false
+    @State private var showingReminderConfirmation = false
 
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
-                header
+                if showsProfileSummary {
+                    profileSummary
+                }
 
                 if let notes = person.notes, !notes.isEmpty {
                     Text(notes)
@@ -38,28 +41,42 @@ struct PersonDetailView: View {
                 Button("Schedule Reminders", systemImage: "bell.badge") {
                     Task {
                         await model.scheduleReminders(for: person)
+                        await MainActor.run {
+                            showingReminderConfirmation = true
+                        }
                     }
                 }
                 .buttonStyle(.borderedProminent)
                 .controlSize(.large)
+                .accessibilityLabel("Schedule reminders for \(person.displayName)")
             }
             .padding()
         }
         .navigationTitle(person.displayName)
+        .celmiTabContentClearance()
         .celmiScreenBackground()
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 Button("Edit", systemImage: "pencil") {
                     showingEdit = true
                 }
+                .accessibilityLabel("Edit \(person.displayName)")
+                .accessibilityIdentifier("personDetail.edit")
 
                 Button("Delete", systemImage: "trash", role: .destructive) {
                     showingDeleteConfirmation = true
                 }
+                .accessibilityLabel("Delete \(person.displayName)")
+                .accessibilityIdentifier("personDetail.delete")
             }
         }
         .sheet(isPresented: $showingEdit) {
             AddEditPersonView(person: person, settings: settings)
+        }
+        .alert("Reminders Scheduled", isPresented: $showingReminderConfirmation) {
+            Button("OK", role: .cancel) {}
+        } message: {
+            Text("Celmi refreshed reminders for \(person.displayName).")
         }
         .confirmationDialog("Delete \(person.displayName)?", isPresented: $showingDeleteConfirmation) {
             Button("Delete", role: .destructive) {
@@ -74,11 +91,19 @@ struct PersonDetailView: View {
         }
     }
 
-    private var header: some View {
+    private var showsProfileSummary: Bool {
+        (person.nickname?.isEmpty == false) ||
+        person.isImportedFromContacts ||
+        person.contactIdentifier != nil
+    }
+
+    private var profileSummary: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text(person.displayName)
-                .font(.largeTitle.weight(.bold))
-                .foregroundStyle(CelmiDesign.deepPlum)
+            if let nickname = person.nickname, !nickname.isEmpty {
+                Label(nickname, systemImage: "quote.bubble")
+                    .font(.title3.weight(.semibold))
+                    .foregroundStyle(CelmiDesign.deepPlum)
+            }
 
             if person.isImportedFromContacts {
                 Label("Imported from Contacts", systemImage: "person.crop.circle.badge.checkmark")

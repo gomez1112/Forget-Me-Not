@@ -9,3 +9,8 @@ script = ""
 name = "Build"
 icon = "run"
 command = "./script/build_and_run.sh"
+
+[[actions]]
+name = "Preview Paywall"
+icon = "run"
+command = "./script/build_and_run.sh --verify --paywall"

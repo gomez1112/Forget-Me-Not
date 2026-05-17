@@ -18,8 +18,8 @@ struct SettingsView: View {
     var body: some View {
         List {
             Section("Privacy") {
-                Text("Celmi keeps your data private. Contact information stays on device and can sync through your private iCloud account when enabled by the system.")
-                    .font(.callout)
+                Text("Celmi keeps your data private. Contact information stays on device and can sync through your private iCloud account when enabled.")
+                    .font(.footnote)
                     .foregroundStyle(.secondary)
 
                 Button("Privacy Details", systemImage: "lock.shield") {
@@ -90,6 +90,7 @@ struct SettingsView: View {
             }
         }
         .navigationTitle("Settings")
+        .celmiTabContentClearance()
         .celmiScreenBackground()
         .task {
             await model.refreshPermissionStates()

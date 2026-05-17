@@ -15,7 +15,7 @@ enum CelmiAppTier: String, CaseIterable, Identifiable, SubscriptionTier {
 
     init?(productID: String) {
         switch productID {
-        case CelmiProductID.monthly, CelmiProductID.yearly, CelmiProductID.lifetime:
+        case CelmiProductID.weekly, CelmiProductID.monthly, CelmiProductID.yearly, CelmiProductID.lifetime:
             self = .pro
         default:
             self = .free

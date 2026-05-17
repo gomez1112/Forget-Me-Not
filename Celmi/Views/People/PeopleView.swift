@@ -45,12 +45,15 @@ struct PeopleView: View {
         }
         .navigationTitle("People")
         .searchable(text: $searchText, prompt: "Search people")
+        .celmiTabContentClearance()
         .celmiScreenBackground()
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
                 Button("Import", systemImage: "person.crop.circle.badge.plus") {
                     showingImport = true
                 }
+                .accessibilityLabel("Import from Contacts")
+                .accessibilityIdentifier("people.import")
 
                 Button("Add Person", systemImage: "plus") {
                     if entitlementService.isPro || people.count < entitlementService.freePeopleLimit {
@@ -59,6 +62,8 @@ struct PeopleView: View {
                         showingPaywall = true
                     }
                 }
+                .accessibilityLabel("Add Person")
+                .accessibilityIdentifier("people.addPerson")
             }
         }
         .sheet(isPresented: $showingAddPerson) {
@@ -77,13 +82,28 @@ struct PeopleView: View {
             Picker("Filter", selection: $selectedFilter) {
                 Text("All").tag(Optional<SpecialDateType>.none)
                 ForEach(SpecialDateType.allCases) { type in
-                    Text(type.title).tag(Optional(type))
+                    Text(type.filterTitle).tag(Optional(type))
                 }
             }
             .pickerStyle(.segmented)
             .accessibilityLabel("Filter people")
         }
         .listRowBackground(Color.clear)
+    }
+}
+
+private extension SpecialDateType {
+    var filterTitle: String {
+        switch self {
+        case .birthday:
+            "Birthday"
+        case .anniversary:
+            "Anniv."
+        case .milestone:
+            "Milestone"
+        case .custom:
+            "Custom"
+        }
     }
 }
 

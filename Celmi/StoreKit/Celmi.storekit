@@ -1,0 +1,181 @@
+{
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
+  "identifier" : "CELMIPRO1",
+  "nonRenewingSubscriptions" : [
+
+  ],
+  "products" : [
+    {
+      "displayPrice" : "49.99",
+      "familyShareable" : true,
+      "internalID" : "CE1A1003",
+      "localizations" : [
+        {
+          "description" : "Unlock Celmi Pro forever with unlimited people, richer reminders, widgets, private iCloud sync features, and themes.",
+          "displayName" : "Celmi Pro Lifetime",
+          "locale" : "en_US"
+        }
+      ],
+      "productID" : "com.celmi.pro.lifetime",
+      "referenceName" : "Celmi Pro Lifetime",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_askToBuyEnabled" : false,
+    "_billingGracePeriodEnabled" : false,
+    "_billingIssuesEnabled" : false,
+    "_disableDialogs" : false,
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_renewalBillingIssuesEnabled" : false,
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ],
+    "_timeRate" : 1002
+  },
+  "subscriptionGroups" : [
+    {
+      "id" : "com.celmi.pro",
+      "localizations" : [
+
+      ],
+      "name" : "Celmi Pro",
+      "subscriptions" : [
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "0.99",
+          "familyShareable" : true,
+          "groupNumber" : 1,
+          "internalID" : "CE1A1000",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Weekly Celmi Pro access with unlimited people, anniversaries, custom milestones, advanced reminders, widgets, private iCloud sync features, and themes.",
+              "displayName" : "Celmi Pro Weekly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.celmi.pro.weekly",
+          "recurringSubscriptionPeriod" : "P1W",
+          "referenceName" : "Celmi Pro Weekly",
+          "subscriptionGroupID" : "com.celmi.pro",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "2.99",
+          "familyShareable" : true,
+          "groupNumber" : 1,
+          "internalID" : "CE1A1001",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Monthly Celmi Pro access with unlimited people, anniversaries, custom milestones, advanced reminders, widgets, private iCloud sync features, and themes.",
+              "displayName" : "Celmi Pro Monthly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.celmi.pro.monthly",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Celmi Pro Monthly",
+          "subscriptionGroupID" : "com.celmi.pro",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "24.99",
+          "familyShareable" : true,
+          "groupNumber" : 1,
+          "internalID" : "CE1A1002",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "Yearly Celmi Pro access with unlimited people, anniversaries, custom milestones, advanced reminders, widgets, private iCloud sync features, and themes.",
+              "displayName" : "Celmi Pro Yearly",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.celmi.pro.yearly",
+          "recurringSubscriptionPeriod" : "P1Y",
+          "referenceName" : "Celmi Pro Yearly",
+          "subscriptionGroupID" : "com.celmi.pro",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        }
+      ]
+    }
+  ],
+  "version" : {
+    "major" : 4,
+    "minor" : 0
+  }
+}

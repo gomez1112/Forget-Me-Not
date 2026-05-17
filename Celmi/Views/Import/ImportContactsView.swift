@@ -27,6 +27,8 @@ struct ImportContactsView: View {
                     Button("Close") {
                         dismiss()
                     }
+                    .accessibilityLabel("Close Import")
+                    .accessibilityIdentifier("contactsImport.close")
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
@@ -39,6 +41,8 @@ struct ImportContactsView: View {
                         dismiss()
                     }
                     .disabled(model.importCandidates.filter(\.isSelected).isEmpty)
+                    .accessibilityLabel("Save Selected Contacts")
+                    .accessibilityIdentifier("contactsImport.saveSelected")
                 }
             }
             .task {

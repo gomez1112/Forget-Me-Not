@@ -11,22 +11,26 @@ BUNDLE_ID="${BUNDLE_ID:-com.transfinite.Celmi}"
 IOS_SIMULATOR="${IOS_SIMULATOR:-iPhone 17 Pro}"
 IPAD_SIMULATOR="${IPAD_SIMULATOR:-iPad Pro 13-inch (M5)}"
 SIMULATOR_BOOT_TIMEOUT_SECONDS="${SIMULATOR_BOOT_TIMEOUT_SECONDS:-60}"
+STOREKIT_CONFIGURATION_PATH="${STOREKIT_CONFIGURATION_PATH:-$ROOT_DIR/Celmi/StoreKit/Celmi.storekit}"
+LEGACY_BUNDLE_IDENTIFIERS=("com.transfinite.Forget-Me-Not")
 
 PLATFORM="ios"
 MODE="run"
+LAUNCH_ARGUMENTS=()
 
 usage() {
     cat <<USAGE
-usage: $0 [--macos|--ios|--ipad] [--build-only|--verify|--logs|--telemetry|--debug]
+usage: $0 [--macos|--ios|--ipad] [--build-only|--verify|--logs|--telemetry|--debug] [--paywall]
 
 Defaults:
   platform      iOS Simulator
   scheme        $SCHEME
   configuration $CONFIGURATION
+  StoreKit      $STOREKIT_CONFIGURATION_PATH
 
 Environment overrides:
   PROJECT_PATH, SCHEME, CONFIGURATION, DERIVED_DATA_PATH, APP_NAME, BUNDLE_ID,
-  IOS_SIMULATOR, IPAD_SIMULATOR
+  IOS_SIMULATOR, IPAD_SIMULATOR, STOREKIT_CONFIGURATION_PATH
 USAGE
 }
 
@@ -55,6 +59,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --debug|debug)
             MODE="debug"
+            ;;
+        --paywall|paywall)
+            LAUNCH_ARGUMENTS+=(--show-paywall)
+            LAUNCH_ARGUMENTS+=(--preview-paywall)
             ;;
         --help|-h|help)
             usage
@@ -116,6 +124,14 @@ try_command_quietly() {
     "$@" >/dev/null 2>&1 || true
 }
 
+print_storekit_configuration() {
+    if [[ -f "$STOREKIT_CONFIGURATION_PATH" ]]; then
+        echo "StoreKit configuration: $STOREKIT_CONFIGURATION_PATH"
+    else
+        echo "StoreKit configuration not found: $STOREKIT_CONFIGURATION_PATH" >&2
+    fi
+}
+
 xcodebuild_project() {
     if [[ "$MODE" == "build" ]]; then
         run_command xcodebuild \
@@ -137,6 +153,34 @@ xcodebuild_project() {
 
 macos_app_path() {
     printf '%s/Build/Products/%s/%s.app\n' "$DERIVED_DATA_PATH" "$CONFIGURATION" "$APP_NAME"
+}
+
+open_macos_app() {
+    local app_path="$1"
+
+    if [[ "${#LAUNCH_ARGUMENTS[@]}" -gt 0 ]]; then
+        run_command /usr/bin/open -n "$app_path" --args "${LAUNCH_ARGUMENTS[@]}"
+    else
+        run_command /usr/bin/open -n "$app_path"
+    fi
+}
+
+launch_simulator_app() {
+    local simulator_id="$1"
+
+    if [[ "${#LAUNCH_ARGUMENTS[@]}" -gt 0 ]]; then
+        run_command xcrun simctl launch "$simulator_id" "$BUNDLE_ID" --args "${LAUNCH_ARGUMENTS[@]}"
+    else
+        run_command xcrun simctl launch "$simulator_id" "$BUNDLE_ID"
+    fi
+}
+
+uninstall_legacy_simulator_apps() {
+    local simulator_id="$1"
+
+    for legacy_bundle_id in "${LEGACY_BUNDLE_IDENTIFIERS[@]}"; do
+        try_command_quietly xcrun simctl uninstall "$simulator_id" "$legacy_bundle_id"
+    done
 }
 
 simulator_app_path() {
@@ -206,20 +250,20 @@ launch_macos() {
             run_command lldb -- "$app_path/Contents/MacOS/$APP_NAME"
             ;;
         logs)
-            run_command /usr/bin/open -n "$app_path"
+            open_macos_app "$app_path"
             run_command /usr/bin/log stream --info --style compact --predicate "process == \"$APP_NAME\""
             ;;
         telemetry)
-            run_command /usr/bin/open -n "$app_path"
+            open_macos_app "$app_path"
             run_command /usr/bin/log stream --info --style compact --predicate "subsystem == \"$BUNDLE_ID\" || process == \"$APP_NAME\""
             ;;
         verify)
-            run_command /usr/bin/open -n "$app_path"
+            open_macos_app "$app_path"
             sleep 2
             run_command pgrep -x "$APP_NAME"
             ;;
         run)
-            run_command /usr/bin/open -n "$app_path"
+            open_macos_app "$app_path"
             ;;
     esac
 }
@@ -247,6 +291,7 @@ launch_simulator() {
 
     run_command_with_timeout "$SIMULATOR_BOOT_TIMEOUT_SECONDS" xcrun simctl bootstatus "$simulator_id" -b
     try_command_quietly xcrun simctl terminate "$simulator_id" "$BUNDLE_ID"
+    uninstall_legacy_simulator_apps "$simulator_id"
     run_command xcrun simctl install "$simulator_id" "$app_path"
 
     case "$MODE" in
@@ -254,17 +299,19 @@ launch_simulator() {
             ;;
         debug)
             echo "--debug is only wired for macOS. Launching the simulator app normally." >&2
-            run_command xcrun simctl launch "$simulator_id" "$BUNDLE_ID"
+            launch_simulator_app "$simulator_id"
             ;;
         logs|telemetry)
-            run_command xcrun simctl launch "$simulator_id" "$BUNDLE_ID"
+            launch_simulator_app "$simulator_id"
             run_command xcrun simctl spawn "$simulator_id" log stream --info --style compact --predicate "process == \"$APP_NAME\""
             ;;
         verify|run)
-            run_command xcrun simctl launch "$simulator_id" "$BUNDLE_ID"
+            launch_simulator_app "$simulator_id"
             ;;
     esac
 }
+
+print_storekit_configuration
 
 case "$PLATFORM" in
     macos)

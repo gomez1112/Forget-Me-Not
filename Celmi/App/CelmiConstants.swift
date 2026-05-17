@@ -9,9 +9,10 @@ enum CelmiConstants {
 }
 
 enum CelmiProductID {
+    static let weekly = "com.celmi.pro.weekly"
     static let monthly = "com.celmi.pro.monthly"
     static let yearly = "com.celmi.pro.yearly"
     static let lifetime = "com.celmi.pro.lifetime"
 
-    static let all: Set<String> = [monthly, yearly, lifetime]
+    static let all: Set<String> = [weekly, monthly, yearly, lifetime]
 }

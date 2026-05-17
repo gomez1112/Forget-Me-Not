@@ -71,6 +71,8 @@ struct AddEditPersonView: View {
                     Button("Cancel") {
                         dismiss()
                     }
+                    .accessibilityLabel("Cancel")
+                    .accessibilityIdentifier("personEditor.cancel")
                 }
 
                 ToolbarItem(placement: .confirmationAction) {
@@ -78,6 +80,8 @@ struct AddEditPersonView: View {
                         save()
                     }
                     .disabled(!canSave)
+                    .accessibilityLabel("Save Person")
+                    .accessibilityIdentifier("personEditor.save")
                 }
             }
         }
