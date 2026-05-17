@@ -7,7 +7,6 @@ enum CelmiDesign {
     static let gold = Color(red: 0.86, green: 0.64, blue: 0.29)
     static let sage = Color(red: 0.42, green: 0.55, blue: 0.48)
     static let mist = Color(red: 0.93, green: 0.90, blue: 0.88)
-    static let tabBarContentBottomPadding: CGFloat = 92
 
     static var heroGradient: LinearGradient {
         LinearGradient(
@@ -48,28 +47,6 @@ struct CelmiCard: ViewModifier {
     }
 }
 
-struct CelmiTabContentClearance: ViewModifier {
-    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
-
-    @ViewBuilder
-    func body(content: Content) -> some View {
-#if os(iOS)
-        if horizontalSizeClass == .compact {
-            VStack(spacing: 0) {
-                content
-                Color.clear
-                    .frame(height: CelmiDesign.tabBarContentBottomPadding)
-                    .allowsHitTesting(false)
-            }
-        } else {
-            content
-        }
-#else
-        content
-#endif
-    }
-}
-
 extension View {
     func celmiScreenBackground() -> some View {
         modifier(CelmiScreenBackground())
@@ -77,10 +54,6 @@ extension View {
 
     func celmiCard(cornerRadius: CGFloat = 28) -> some View {
         modifier(CelmiCard(cornerRadius: cornerRadius))
-    }
-
-    func celmiTabContentClearance() -> some View {
-        modifier(CelmiTabContentClearance())
     }
 }
 

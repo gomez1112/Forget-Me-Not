@@ -36,7 +36,6 @@ struct DashboardView: View {
             }
             .padding()
         }
-        .celmiTabContentClearance()
         .navigationTitle("Today")
         .celmiScreenBackground()
         .toolbar {

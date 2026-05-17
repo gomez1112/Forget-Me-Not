@@ -53,7 +53,6 @@ struct PersonDetailView: View {
             .padding()
         }
         .navigationTitle(person.displayName)
-        .celmiTabContentClearance()
         .celmiScreenBackground()
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {

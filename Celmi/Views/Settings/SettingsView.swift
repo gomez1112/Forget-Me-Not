@@ -90,7 +90,6 @@ struct SettingsView: View {
             }
         }
         .navigationTitle("Settings")
-        .celmiTabContentClearance()
         .celmiScreenBackground()
         .task {
             await model.refreshPermissionStates()

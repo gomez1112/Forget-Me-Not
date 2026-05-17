@@ -46,7 +46,6 @@ struct UpcomingEventsView: View {
             }
         }
         .navigationTitle("Upcoming")
-        .celmiTabContentClearance()
         .celmiScreenBackground()
     }
 }

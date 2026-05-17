@@ -69,7 +69,6 @@ struct PeopleView: View {
         }
         .navigationTitle("People")
         .searchable(text: $searchText, prompt: "Search people")
-        .celmiTabContentClearance()
         .celmiScreenBackground()
         .toolbar {
             ToolbarItemGroup(placement: .primaryAction) {
