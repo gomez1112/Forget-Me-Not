@@ -17,11 +17,10 @@ LEGACY_BUNDLE_IDENTIFIERS=("com.transfinite.Forget-Me-Not")
 PLATFORM="ios"
 MODE="run"
 LAUNCH_ARGUMENTS=()
-USE_PREVIEW_PAYWALL=1
 
 usage() {
     cat <<USAGE
-usage: $0 [--macos|--ios|--ipad] [--build-only|--verify|--logs|--telemetry|--debug] [--paywall] [--storekit-paywall]
+usage: $0 [--macos|--ios|--ipad] [--build-only|--verify|--logs|--telemetry|--debug] [--paywall]
 
 Defaults:
   platform      iOS Simulator
@@ -64,10 +63,6 @@ while [[ $# -gt 0 ]]; do
         --paywall|paywall)
             LAUNCH_ARGUMENTS+=(--show-paywall)
             ;;
-        --storekit-paywall|storekit-paywall)
-            USE_PREVIEW_PAYWALL=0
-            LAUNCH_ARGUMENTS+=(--storekit-paywall)
-            ;;
         --help|-h|help)
             usage
             exit 0
@@ -80,10 +75,6 @@ while [[ $# -gt 0 ]]; do
     esac
     shift
 done
-
-if [[ "$USE_PREVIEW_PAYWALL" == "1" ]]; then
-    LAUNCH_ARGUMENTS+=(--preview-paywall)
-fi
 
 run_command() {
     printf '+'

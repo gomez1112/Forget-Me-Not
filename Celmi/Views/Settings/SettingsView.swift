@@ -1,3 +1,4 @@
+import FlexStore
 import SwiftData
 import SwiftUI
 
@@ -68,9 +69,14 @@ struct SettingsView: View {
 
             Section("Premium") {
                 LabeledContent("Tier", value: entitlementService.tier.rawValue.capitalized)
-                Button("Manage Pro", systemImage: "crown") {
+                Button("Manage Subscription", systemImage: "crown") {
                     showingPaywall = true
                 }
+
+                LifetimeUnlockSettingsCard()
+
+                RestorePurchasesButton<CelmiAppTier>()
+                    .accessibilityHint("Checks the App Store for previous Celmi Pro purchases.")
             }
 
             Section("Onboarding") {

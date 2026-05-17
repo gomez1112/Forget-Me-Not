@@ -37,11 +37,15 @@ final class EntitlementService {
     }
 
     var tier: AppTier {
-        store.subscriptionTier == .pro ? .pro : .free
+        store.subscriptionTier == .pro || hasLifetimeUnlock ? .pro : .free
     }
 
     var isPro: Bool {
         tier == .pro
+    }
+
+    var hasLifetimeUnlock: Bool {
+        store.purchasedNonConsumables.contains(CelmiProductID.lifetime)
     }
 
     var freePeopleLimit: Int {

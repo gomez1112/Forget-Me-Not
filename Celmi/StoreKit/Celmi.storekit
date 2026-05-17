@@ -34,6 +34,9 @@
     "_askToBuyEnabled" : false,
     "_billingGracePeriodEnabled" : false,
     "_billingIssuesEnabled" : false,
+    "_compatibilityTimeRate" : {
+      "3" : 6
+    },
     "_disableDialogs" : false,
     "_failTransactionsEnabled" : false,
     "_locale" : "en_US",
@@ -91,6 +94,15 @@
           "adHocOffers" : [
 
           ],
+          "billingPlans" : [
+            {
+              "billingPlanType" : "BILLED_UPFRONT",
+              "commitmentDisplayPrice" : "0.99",
+              "displayPrice" : "0.99",
+              "internalID" : "9DDEB87E",
+              "isEnabled" : true
+            }
+          ],
           "codeOffers" : [
 
           ],
@@ -98,7 +110,9 @@
           "familyShareable" : true,
           "groupNumber" : 1,
           "internalID" : "CE1A1000",
-          "introductoryOffer" : null,
+          "introductoryOffers" : [
+
+          ],
           "localizations" : [
             {
               "description" : "Weekly Celmi Pro access with unlimited people, anniversaries, custom milestones, advanced reminders, widgets, private iCloud sync features, and themes.",
@@ -119,6 +133,15 @@
           "adHocOffers" : [
 
           ],
+          "billingPlans" : [
+            {
+              "billingPlanType" : "BILLED_UPFRONT",
+              "commitmentDisplayPrice" : "2.99",
+              "displayPrice" : "2.99",
+              "internalID" : "9B947FAD",
+              "isEnabled" : true
+            }
+          ],
           "codeOffers" : [
 
           ],
@@ -126,7 +149,9 @@
           "familyShareable" : true,
           "groupNumber" : 1,
           "internalID" : "CE1A1001",
-          "introductoryOffer" : null,
+          "introductoryOffers" : [
+
+          ],
           "localizations" : [
             {
               "description" : "Monthly Celmi Pro access with unlimited people, anniversaries, custom milestones, advanced reminders, widgets, private iCloud sync features, and themes.",
@@ -147,6 +172,15 @@
           "adHocOffers" : [
 
           ],
+          "billingPlans" : [
+            {
+              "billingPlanType" : "BILLED_UPFRONT",
+              "commitmentDisplayPrice" : "24.99",
+              "displayPrice" : "24.99",
+              "internalID" : "06947E8C",
+              "isEnabled" : true
+            }
+          ],
           "codeOffers" : [
 
           ],
@@ -154,7 +188,9 @@
           "familyShareable" : true,
           "groupNumber" : 1,
           "internalID" : "CE1A1002",
-          "introductoryOffer" : null,
+          "introductoryOffers" : [
+
+          ],
           "localizations" : [
             {
               "description" : "Yearly Celmi Pro access with unlimited people, anniversaries, custom milestones, advanced reminders, widgets, private iCloud sync features, and themes.",
@@ -175,7 +211,7 @@
     }
   ],
   "version" : {
-    "major" : 4,
+    "major" : 5,
     "minor" : 0
   }
 }
