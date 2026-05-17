@@ -20,14 +20,38 @@ struct PeopleView: View {
         }
     }
 
+    private var emptyStateTitle: String {
+        if !searchText.isEmpty {
+            return "No matching people."
+        }
+
+        if let selectedFilter {
+            return "No \(selectedFilter.emptyStatePluralTitle) yet."
+        }
+
+        return "Your inner circle is waiting."
+    }
+
+    private var emptyStateMessage: String {
+        if !searchText.isEmpty {
+            return "Try another name or clear the search."
+        }
+
+        if let selectedFilter {
+            return "Add a \(selectedFilter.emptyStateSingularTitle) for someone or switch filters."
+        }
+
+        return "Import birthdays from Contacts or add someone manually."
+    }
+
     var body: some View {
         List {
             pickerSection
 
             if filteredPeople.isEmpty {
                 CelmiEmptyStateView(
-                    title: "Your inner circle is waiting.",
-                    message: "Import birthdays from Contacts or add someone manually.",
+                    title: emptyStateTitle,
+                    message: emptyStateMessage,
                     systemImage: "person.2"
                 )
                 .listRowBackground(Color.clear)
@@ -103,6 +127,32 @@ private extension SpecialDateType {
             "Milestone"
         case .custom:
             "Custom"
+        }
+    }
+
+    var emptyStateSingularTitle: String {
+        switch self {
+        case .birthday:
+            "birthday"
+        case .anniversary:
+            "anniversary"
+        case .milestone:
+            "milestone"
+        case .custom:
+            "custom date"
+        }
+    }
+
+    var emptyStatePluralTitle: String {
+        switch self {
+        case .birthday:
+            "birthdays"
+        case .anniversary:
+            "anniversaries"
+        case .milestone:
+            "milestones"
+        case .custom:
+            "custom dates"
         }
     }
 }

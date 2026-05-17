@@ -24,7 +24,7 @@ struct MainTabView: View {
 
             Tab("Upcoming", systemImage: "calendar.badge.clock", value: CelmiTab.upcoming) {
                 NavigationStack {
-                    UpcomingEventsView()
+                    UpcomingEventsView(settings: settings)
                 }
             }
             .customizationID("celmi.tab.upcoming")

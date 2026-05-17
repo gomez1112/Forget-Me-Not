@@ -272,6 +272,7 @@ private struct PaywallCloseButton: View {
                     Circle()
                         .stroke(.white.opacity(0.22), lineWidth: 1)
                 }
+                .accessibilityHidden(true)
         }
         .buttonStyle(.plain)
         .foregroundStyle(.white)

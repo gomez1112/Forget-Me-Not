@@ -3,6 +3,7 @@ import SwiftUI
 
 struct UpcomingEventsView: View {
     @Query(sort: \Person.fullName) private var people: [Person]
+    @Bindable var settings: AppSettings
 
     private var groupedEvents: [(String, [SpecialDateEvent])] {
         let events = SpecialDateEvent.events(for: people)
@@ -28,8 +29,17 @@ struct UpcomingEventsView: View {
                 ForEach(groupedEvents, id: \.0) { section, events in
                     Section(section) {
                         ForEach(events) { event in
-                            UpcomingEventRow(event: event)
+                            if let person = people.first(where: { $0.id == event.personID }) {
+                                NavigationLink {
+                                    PersonDetailView(person: person, settings: settings)
+                                } label: {
+                                    UpcomingEventRow(event: event)
+                                }
                                 .listRowBackground(Color.clear)
+                            } else {
+                                UpcomingEventRow(event: event)
+                                    .listRowBackground(Color.clear)
+                            }
                         }
                     }
                 }
