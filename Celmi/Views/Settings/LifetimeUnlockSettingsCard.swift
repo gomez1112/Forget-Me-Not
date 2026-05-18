@@ -19,6 +19,14 @@ struct LifetimeUnlockSettingsCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
+            Image("CelmiProLifetime")
+                .resizable()
+                .scaledToFill()
+                .frame(maxWidth: .infinity)
+                .frame(height: 148)
+                .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
+                .accessibilityHidden(true)
+
             HStack(alignment: .top, spacing: 12) {
                 Image(systemName: "infinity.circle.fill")
                     .font(.title2)

@@ -20,14 +20,14 @@ struct OnboardingFlowView: View {
             OnboardingPage(
                 title: "Welcome to Celmi",
                 description: "A private, beautiful place to remember the birthdays, anniversaries, and milestones of the people who matter most.",
-                systemImage: "heart.text.square",
+                image: "CelmiInnerCircle",
                 backgroundColor: CelmiDesign.background,
                 iconColor: CelmiDesign.rose
             ),
             OnboardingPage(
                 title: "Import Effortlessly",
                 description: "Celmi can find birthdays already saved in Contacts, so setup takes seconds. You can also add people manually.",
-                systemImage: "person.crop.circle.badge.plus",
+                image: "CelmiPrivateSync",
                 backgroundColor: CelmiDesign.background,
                 iconColor: CelmiDesign.gold,
                 actionTitle: "Allow Contacts",
@@ -42,7 +42,7 @@ struct OnboardingFlowView: View {
             OnboardingPage(
                 title: "Gentle Reminders",
                 description: "Get thoughtful reminders a week before, a day before, or the morning of a special date.",
-                systemImage: "bell.badge",
+                image: "CelmiPrivateSync",
                 backgroundColor: CelmiDesign.background,
                 iconColor: CelmiDesign.rose,
                 actionTitle: "Allow Notifications",
@@ -57,14 +57,14 @@ struct OnboardingFlowView: View {
             OnboardingPage(
                 title: "Private by Design",
                 description: "Your contact data stays yours. Celmi uses on-device processing and private iCloud sync through your Apple account.",
-                systemImage: "lock.icloud",
+                image: "CelmiPrivateSync",
                 backgroundColor: CelmiDesign.background,
                 iconColor: CelmiDesign.sage
             ),
             OnboardingPage(
                 title: "Be the Friend Who Remembers",
                 description: "Celebrate your inner circle without social feeds, ads, or clutter.",
-                systemImage: "sparkles",
+                image: "CelmiInnerCircle",
                 backgroundColor: CelmiDesign.background,
                 iconColor: CelmiDesign.gold
             )
@@ -236,16 +236,9 @@ private struct CelmiOnboardingPager: View {
     private func onboardingPage(_ page: OnboardingPage?) -> some View {
         if let page {
             VStack(spacing: 28) {
-                Spacer(minLength: 28)
+                Spacer(minLength: 20)
 
-                icon(for: page)
-                    .frame(width: 112, height: 112)
-                    .background(.white.opacity(0.62), in: Circle())
-                    .overlay {
-                        Circle()
-                            .stroke(.white.opacity(0.72), lineWidth: 1)
-                    }
-                    .shadow(color: (page.iconColor ?? tintColor).opacity(0.16), radius: 28, y: 14)
+                artwork(for: page)
                     .accessibilityHidden(true)
 
                 VStack(spacing: 14) {
@@ -263,7 +256,7 @@ private struct CelmiOnboardingPager: View {
                         .frame(maxWidth: 560)
                 }
 
-                Spacer(minLength: 120)
+                Spacer(minLength: 96)
             }
             .padding(.horizontal, 28)
             .accessibilityElement(children: .combine)
@@ -271,18 +264,33 @@ private struct CelmiOnboardingPager: View {
     }
 
     @ViewBuilder
-    private func icon(for page: OnboardingPage) -> some View {
+    private func artwork(for page: OnboardingPage) -> some View {
         switch page.icon {
         case .system(let systemImage):
             Image(systemName: systemImage)
                 .font(.system(size: 48, weight: .semibold))
                 .foregroundStyle(page.iconColor ?? tintColor)
                 .symbolRenderingMode(.hierarchical)
+                .frame(width: 112, height: 112)
+                .background(.white.opacity(0.62), in: Circle())
+                .overlay {
+                    Circle()
+                        .stroke(.white.opacity(0.72), lineWidth: 1)
+                }
+                .shadow(color: (page.iconColor ?? tintColor).opacity(0.16), radius: 28, y: 14)
         case .asset(let image):
             Image(image)
                 .resizable()
                 .scaledToFit()
-                .padding(26)
+                .frame(maxWidth: 320)
+                .frame(height: 214)
+                .background(.white.opacity(0.58), in: RoundedRectangle(cornerRadius: 32, style: .continuous))
+                .clipShape(RoundedRectangle(cornerRadius: 32, style: .continuous))
+                .overlay {
+                    RoundedRectangle(cornerRadius: 32, style: .continuous)
+                        .stroke(.white.opacity(0.72), lineWidth: 1)
+                }
+                .shadow(color: CelmiDesign.rose.opacity(0.12), radius: 28, y: 14)
         }
     }
 }

@@ -7,6 +7,14 @@ struct PrivacyView: View {
         NavigationStack {
             List {
                 Section("Private by Design") {
+                    Image("CelmiPrivateSync")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(maxWidth: .infinity)
+                        .frame(height: 180)
+                        .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
+                        .accessibilityHidden(true)
+
                     Text("Celmi stores relationship dates in SwiftData on your device. When iCloud sync is available, data syncs through your private iCloud account.")
                     Text("Celmi does not require an account, does not include ads, and does not include third-party analytics.")
                 }

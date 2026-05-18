@@ -110,12 +110,13 @@ struct DashboardView: View {
 
 private struct DashboardEmptyStateCard: View {
     var body: some View {
-        HStack(spacing: 16) {
-            Image(systemName: "person.2.wave.2")
-                .font(.title2.weight(.semibold))
-                .foregroundStyle(CelmiDesign.rose)
-                .frame(width: 48, height: 48)
-                .background(CelmiDesign.rose.opacity(0.12), in: Circle())
+        VStack(alignment: .leading, spacing: 16) {
+            Image("CelmiInnerCircle")
+                .resizable()
+                .scaledToFill()
+                .frame(maxWidth: .infinity)
+                .frame(height: 176)
+                .clipShape(RoundedRectangle(cornerRadius: 22, style: .continuous))
                 .accessibilityHidden(true)
 
             VStack(alignment: .leading, spacing: 6) {
