@@ -78,6 +78,7 @@ struct AddEditPersonView: View {
 
                 DefaultReminderSettingsSection(settings: settings, title: "Defaults For New Dates")
             }
+            .formStyle(.grouped)
             .navigationTitle(person == nil ? "Add Person or Occasion" : "Edit Person")
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

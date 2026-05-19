@@ -48,7 +48,8 @@ struct CelmiWidgetProvider: TimelineProvider {
     }
 
     func getSnapshot(in context: Context, completion: @escaping (CelmiWidgetEntry) -> Void) {
-        completion(CelmiWidgetEntry(date: Date(), events: WidgetSnapshotStore.loadEvents()))
+        let events = context.isPreview ? CelmiWidgetEntry.placeholderEvents : WidgetSnapshotStore.loadEvents()
+        completion(CelmiWidgetEntry(date: Date(), events: events))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<CelmiWidgetEntry>) -> Void) {
@@ -67,7 +68,7 @@ private enum WidgetSnapshotStore {
               let data = defaults.data(forKey: storageKey),
               let events = try? JSONDecoder().decode([CelmiWidgetEvent].self, from: data)
         else {
-            return CelmiWidgetEntry.placeholderEvents
+            return []
         }
 
         return Array(events.prefix(3))
@@ -121,8 +122,10 @@ struct CelmiWidgetEntryView: View {
                 Text(event.daysRemainingText)
                     .font(.headline.weight(.semibold))
                     .foregroundStyle(Color(red: 0.82, green: 0.38, blue: 0.48))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
             }
-            .widgetBackground()
+            .widgetBackground(contentPadding: 14)
             .accessibilityElement(children: .combine)
         }
     }
@@ -132,39 +135,54 @@ struct CelmiWidgetEntryView: View {
         if entry.events.isEmpty {
             emptyLayout
         } else {
-            VStack(alignment: .leading, spacing: 10) {
+            VStack(alignment: .leading, spacing: 6) {
                 Text("Up Next")
-                    .font(.headline.weight(.semibold))
+                    .font(.subheadline.weight(.semibold))
                     .foregroundStyle(Color(red: 0.18, green: 0.08, blue: 0.16))
+                    .lineLimit(1)
 
-                ForEach(entry.events.prefix(3), id: \.self) { event in
-                    HStack(spacing: 8) {
-                        Image(systemName: event.systemImage)
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color(red: 0.82, green: 0.38, blue: 0.48))
-                            .frame(width: 18)
-
-                        VStack(alignment: .leading, spacing: 1) {
-                            Text(event.personName)
-                                .font(.subheadline.weight(.semibold))
-                                .lineLimit(1)
-                            Text("\(event.eventTitle) - \(event.eventDateText)")
-                                .font(.caption)
-                                .foregroundStyle(.secondary)
-                                .lineLimit(1)
-                        }
-
-                        Spacer(minLength: 6)
-
-                        Text(event.daysRemainingText)
-                            .font(.caption.weight(.semibold))
-                            .foregroundStyle(Color(red: 0.82, green: 0.38, blue: 0.48))
-                            .lineLimit(1)
+                VStack(alignment: .leading, spacing: 5) {
+                    ForEach(entry.events.prefix(3), id: \.self) { event in
+                        mediumEventRow(event)
+                            .frame(height: 31)
                     }
                 }
             }
-            .widgetBackground()
+            .widgetBackground(contentPadding: 12)
             .accessibilityElement(children: .combine)
+        }
+    }
+
+    private func mediumEventRow(_ event: CelmiWidgetEvent) -> some View {
+        HStack(spacing: 8) {
+            Image(systemName: event.systemImage)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Color(red: 0.82, green: 0.38, blue: 0.48))
+                .frame(width: 18)
+                .accessibilityHidden(true)
+
+            VStack(alignment: .leading, spacing: 0) {
+                Text(event.personName)
+                    .font(.subheadline.weight(.semibold))
+                    .foregroundStyle(Color(red: 0.18, green: 0.08, blue: 0.16))
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+
+                Text("\(event.eventTitle) - \(event.eventDateText)")
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.82)
+            }
+
+            Spacer(minLength: 6)
+
+            Text(event.daysRemainingText)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(Color(red: 0.82, green: 0.38, blue: 0.48))
+                .lineLimit(1)
+                .minimumScaleFactor(0.78)
+                .multilineTextAlignment(.trailing)
         }
     }
 
@@ -216,8 +234,9 @@ struct CelmiWidgetEntryView: View {
 }
 
 private extension View {
-    func widgetBackground() -> some View {
-        frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+    func widgetBackground(contentPadding: CGFloat = 14) -> some View {
+        padding(contentPadding)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
             .containerBackground(for: .widget) {
                 LinearGradient(
                     colors: [
@@ -241,6 +260,7 @@ struct CelmiWidget: Widget {
         .configurationDisplayName("Up Next")
         .description("See the next birthday, anniversary, milestone, or important date.")
         .supportedFamilies(Self.supportedFamilies)
+        .contentMarginsDisabled()
     }
 
     private static var supportedFamilies: [WidgetFamily] {

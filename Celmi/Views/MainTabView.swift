@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 
 enum CelmiTab: Hashable, CaseIterable, Identifiable {
@@ -10,8 +11,15 @@ enum CelmiTab: Hashable, CaseIterable, Identifiable {
 }
 
 struct MainTabView: View {
+    @Environment(\.scenePhase) private var scenePhase
+    @Environment(EntitlementService.self) private var entitlementService
+    @Query(sort: \Person.fullName) private var people: [Person]
+
     @Bindable var settings: AppSettings
+
     @State private var selection: CelmiTab = .today
+    @State private var showingRoutedAddDate = false
+    @State private var showingRoutedPaywall = false
 
     var body: some View {
         TabView(selection: $selection) {
@@ -45,9 +53,53 @@ struct MainTabView: View {
         }
         .tabViewStyle(.sidebarAdaptable)
         .tint(CelmiDesign.rose)
+        .onAppear {
+            consumePendingAppIntentRouteSoon()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            guard newPhase == .active else { return }
+            consumePendingAppIntentRouteSoon()
+        }
+        .sheet(isPresented: $showingRoutedAddDate) {
+            AddEditPersonView(settings: settings)
+        }
+        .sheet(isPresented: $showingRoutedPaywall) {
+            PaywallView()
+        }
 #if os(iOS)
         .toolbarBackground(.visible, for: .tabBar)
         .toolbarBackground(CelmiDesign.background.opacity(0.96), for: .tabBar)
 #endif
+    }
+
+    private func consumePendingAppIntentRouteSoon() {
+        consumePendingAppIntentRoute()
+
+        Task { @MainActor in
+            try? await Task.sleep(for: .milliseconds(350))
+            consumePendingAppIntentRoute()
+        }
+    }
+
+    private func consumePendingAppIntentRoute() {
+        guard let destination = CelmiAppIntentRouteStore.consumeDestination() else { return }
+
+        switch destination {
+        case .today:
+            selection = .today
+        case .upcoming:
+            selection = .upcoming
+        case .people:
+            selection = .people
+        case .settings:
+            selection = .settings
+        case .addDate:
+            selection = .people
+            if entitlementService.isPro || people.count < entitlementService.freePeopleLimit {
+                showingRoutedAddDate = true
+            } else {
+                showingRoutedPaywall = true
+            }
+        }
     }
 }
