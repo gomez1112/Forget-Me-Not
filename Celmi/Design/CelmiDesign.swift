@@ -73,7 +73,11 @@ struct EventTypeBadge: View {
     private var tint: Color {
         switch type {
         case .birthday: CelmiDesign.rose
-        case .anniversary: CelmiDesign.gold
+        case .anniversary, .weddingAnniversary: CelmiDesign.gold
+        case .workAnniversary: CelmiDesign.sage
+        case .relationshipMilestone: CelmiDesign.rose
+        case .graduation: .blue
+        case .memorial: .purple
         case .milestone: CelmiDesign.sage
         case .custom: .indigo
         }

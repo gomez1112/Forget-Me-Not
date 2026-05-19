@@ -8,6 +8,7 @@ final class CelmiModel {
     private let contactsService: ContactsService
     private let notificationService: NotificationService
     private let widgetRefreshService: WidgetRefreshService
+    private let widgetSnapshotService: WidgetSnapshotService
 
     var contactsPermissionState: ContactsPermissionState = .notDetermined
     var notificationPermissionState: NotificationPermissionState = .notDetermined
@@ -17,11 +18,13 @@ final class CelmiModel {
     init(
         contactsService: ContactsService = ContactsService(),
         notificationService: NotificationService = NotificationService(),
-        widgetRefreshService: WidgetRefreshService = WidgetRefreshService()
+        widgetRefreshService: WidgetRefreshService = WidgetRefreshService(),
+        widgetSnapshotService: WidgetSnapshotService = WidgetSnapshotService()
     ) {
         self.contactsService = contactsService
         self.notificationService = notificationService
         self.widgetRefreshService = widgetRefreshService
+        self.widgetSnapshotService = widgetSnapshotService
     }
 
     static var preview: CelmiModel {
@@ -66,6 +69,7 @@ final class CelmiModel {
             existingPeople: existingPeople
         )
 
+        var insertedPeople: [Person] = []
         for candidate in candidates {
             let person = candidate.makePerson(settings: settings)
             context.insert(person)
@@ -75,11 +79,16 @@ final class CelmiModel {
                     context.insert(preference)
                 }
             }
+            insertedPeople.append(person)
         }
 
         try? context.save()
         importCandidates = []
-        widgetRefreshService.refreshAllTimelines()
+        let allPeople = existingPeople + insertedPeople
+        refreshWidgets(for: allPeople)
+        Task {
+            await rescheduleReminders(for: allPeople)
+        }
     }
 
     func rescheduleReminders(for people: [Person]) async {
@@ -103,6 +112,11 @@ final class CelmiModel {
     }
 
     func refreshWidgets() {
+        widgetRefreshService.refreshAllTimelines()
+    }
+
+    func refreshWidgets(for people: [Person]) {
+        widgetSnapshotService.saveUpcomingEvents(for: people)
         widgetRefreshService.refreshAllTimelines()
     }
 }

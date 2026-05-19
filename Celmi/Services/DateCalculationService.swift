@@ -32,6 +32,54 @@ struct DateCalculationService: Sendable {
         return calendar.dateComponents([.day], from: start, to: next).day ?? 0
     }
 
+    func nextOccurrence(for specialDate: SpecialDate, from date: Date = Date()) -> Date? {
+        let startOfDay = calendar.startOfDay(for: date)
+
+        switch specialDate.recurrence {
+        case .yearly:
+            return nextOccurrence(month: specialDate.month, day: specialDate.day, from: startOfDay)
+        case .monthly:
+            return nextMonthlyOccurrence(day: specialDate.day, from: startOfDay)
+        case .oneTime:
+            guard let year = specialDate.year,
+                  let occurrence = occurrence(month: specialDate.month, day: specialDate.day, year: year),
+                  occurrence >= startOfDay
+            else {
+                return nil
+            }
+            return occurrence
+        case .custom:
+            guard let year = specialDate.year,
+                  let interval = specialDate.customRecurrenceDays,
+                  interval > 0,
+                  let firstOccurrence = occurrence(month: specialDate.month, day: specialDate.day, year: year)
+            else {
+                return nextOccurrence(month: specialDate.month, day: specialDate.day, from: startOfDay)
+            }
+
+            if firstOccurrence >= startOfDay {
+                return firstOccurrence
+            }
+
+            let elapsedDays = calendar.dateComponents([.day], from: firstOccurrence, to: startOfDay).day ?? 0
+            var cycleCount = max(1, Int(ceil(Double(elapsedDays) / Double(interval))))
+            var candidate = calendar.date(byAdding: .day, value: cycleCount * interval, to: firstOccurrence)
+
+            while let candidateDate = candidate, candidateDate < startOfDay {
+                cycleCount += 1
+                candidate = calendar.date(byAdding: .day, value: cycleCount * interval, to: firstOccurrence)
+            }
+
+            return candidate
+        }
+    }
+
+    func daysRemaining(for specialDate: SpecialDate, from date: Date = Date()) -> Int? {
+        guard let next = nextOccurrence(for: specialDate, from: date) else { return nil }
+        let start = calendar.startOfDay(for: date)
+        return calendar.dateComponents([.day], from: start, to: next).day
+    }
+
     func age(on occurrence: Date, birthYear: Int?) -> Int? {
         guard let birthYear else { return nil }
         return max(0, calendar.component(.year, from: occurrence) - birthYear)
@@ -64,18 +112,34 @@ struct DateCalculationService: Sendable {
         hour: Int,
         minute: Int,
         from date: Date = Date()
-    ) -> Date {
-        let occurrence = nextOccurrence(month: specialDate.month, day: specialDate.day, from: date)
-        let reminderDay = calendar.date(byAdding: .day, value: -daysBefore, to: occurrence) ?? occurrence
-        let components = calendar.dateComponents([.year, .month, .day], from: reminderDay)
-        return calendar.date(from: DateComponents(
-            calendar: calendar,
-            year: components.year,
-            month: components.month,
-            day: components.day,
-            hour: hour,
-            minute: minute
-        )) ?? reminderDay
+    ) -> Date? {
+        var searchDate = date
+
+        for _ in 0..<240 {
+            guard let occurrence = nextOccurrence(for: specialDate, from: searchDate) else { return nil }
+            let reminderDay = calendar.date(byAdding: .day, value: -daysBefore, to: occurrence) ?? occurrence
+            let components = calendar.dateComponents([.year, .month, .day], from: reminderDay)
+            let candidate = calendar.date(from: DateComponents(
+                calendar: calendar,
+                year: components.year,
+                month: components.month,
+                day: components.day,
+                hour: hour,
+                minute: minute
+            )) ?? reminderDay
+
+            if candidate >= date {
+                return candidate
+            }
+
+            guard specialDate.recurrence != .oneTime else {
+                return nil
+            }
+
+            searchDate = calendar.date(byAdding: .day, value: 1, to: occurrence) ?? occurrence.addingTimeInterval(86_400)
+        }
+
+        return nil
     }
 
     private func occurrence(month: Int, day: Int, year: Int) -> Date? {
@@ -89,6 +153,44 @@ struct DateCalculationService: Sendable {
         }
 
         return calendar.validDate(year: year, month: month, day: day)
+    }
+
+    private func nextMonthlyOccurrence(day: Int, from date: Date) -> Date? {
+        let startOfDay = calendar.startOfDay(for: date)
+        let startComponents = calendar.dateComponents([.year, .month], from: startOfDay)
+        guard let firstOfMonth = calendar.date(from: DateComponents(
+            calendar: calendar,
+            year: startComponents.year,
+            month: startComponents.month,
+            day: 1
+        )) else {
+            return nil
+        }
+
+        for monthOffset in 0..<24 {
+            guard let monthDate = calendar.date(byAdding: .month, value: monthOffset, to: firstOfMonth) else {
+                continue
+            }
+
+            let components = calendar.dateComponents([.year, .month], from: monthDate)
+            guard let year = components.year,
+                  let month = components.month,
+                  let range = calendar.range(of: .day, in: .month, for: monthDate)
+            else {
+                continue
+            }
+
+            let clampedDay = min(day, range.upperBound - 1)
+            guard let occurrence = calendar.validDate(year: year, month: month, day: clampedDay),
+                  occurrence >= startOfDay
+            else {
+                continue
+            }
+
+            return occurrence
+        }
+
+        return nil
     }
 }
 
@@ -127,6 +229,8 @@ struct SpecialDateEvent: Identifiable, Hashable, Sendable {
     var month: Int
     var day: Int
     var year: Int?
+    var recurrence: SpecialDateRecurrence
+    var personPhotoData: Data?
     var nextDate: Date
     var daysRemaining: Int
     var count: Int?
@@ -139,20 +243,29 @@ struct SpecialDateEvent: Identifiable, Hashable, Sendable {
         DateCalculationService().formattedRelativeDays(daysRemaining)
     }
 
+    var displayCount: Int? {
+        guard let count, count > 0 else { return nil }
+        return count
+    }
+
     static func events(
         for people: [Person],
         from date: Date = Date(),
         service: DateCalculationService = DateCalculationService()
     ) -> [SpecialDateEvent] {
         people.flatMap { person in
-            (person.specialDates ?? []).map { specialDate in
-                let next = service.nextOccurrence(month: specialDate.month, day: specialDate.day, from: date)
-                let days = service.daysRemaining(month: specialDate.month, day: specialDate.day, from: date)
+            (person.specialDates ?? []).compactMap { specialDate in
+                guard let next = service.nextOccurrence(for: specialDate, from: date),
+                      let days = service.daysRemaining(for: specialDate, from: date)
+                else {
+                    return nil
+                }
+
                 let count: Int?
                 switch specialDate.type {
                 case .birthday:
                     count = service.age(on: next, birthYear: specialDate.year)
-                case .anniversary, .milestone, .custom:
+                case .anniversary, .weddingAnniversary, .workAnniversary, .relationshipMilestone, .graduation, .memorial, .milestone, .custom:
                     count = service.anniversaryCount(on: next, startYear: specialDate.year)
                 }
 
@@ -166,6 +279,8 @@ struct SpecialDateEvent: Identifiable, Hashable, Sendable {
                     month: specialDate.month,
                     day: specialDate.day,
                     year: specialDate.year,
+                    recurrence: specialDate.recurrence,
+                    personPhotoData: person.photoData,
                     nextDate: next,
                     daysRemaining: days,
                     count: count

@@ -5,6 +5,7 @@ struct PersonDetailView: View {
     @Environment(\.modelContext) private var modelContext
     @Environment(CelmiModel.self) private var model
     @Environment(\.dismiss) private var dismiss
+    @Query(sort: \Person.fullName) private var people: [Person]
 
     @Bindable var person: Person
     @Bindable var settings: AppSettings
@@ -16,9 +17,7 @@ struct PersonDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 22) {
-                if showsProfileSummary {
-                    profileSummary
-                }
+                profileSummary
 
                 if let notes = person.notes, !notes.isEmpty {
                     Text(notes)
@@ -26,6 +25,10 @@ struct PersonDetailView: View {
                         .foregroundStyle(.secondary)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .celmiCard()
+                }
+
+                if hasHelpfulDetails {
+                    helpfulDetails
                 }
 
                 VStack(alignment: .leading, spacing: 14) {
@@ -40,7 +43,7 @@ struct PersonDetailView: View {
 
                 Button("Schedule Reminders", systemImage: "bell.badge") {
                     Task {
-                        await model.scheduleReminders(for: person)
+                        await model.rescheduleReminders(for: people)
                         await MainActor.run {
                             showingReminderConfirmation = true
                         }
@@ -83,36 +86,96 @@ struct PersonDetailView: View {
                     await model.cancelReminders(for: person)
                     modelContext.delete(person)
                     try? modelContext.save()
-                    model.refreshWidgets()
+                    let remainingPeople = people.filter { $0.id != person.id }
+                    model.refreshWidgets(for: remainingPeople)
+                    await model.rescheduleReminders(for: remainingPeople)
                     dismiss()
                 }
             }
         }
     }
 
-    private var showsProfileSummary: Bool {
-        (person.nickname?.isEmpty == false) ||
-        person.isImportedFromContacts ||
-        person.contactIdentifier != nil
+    private var hasHelpfulDetails: Bool {
+        [
+            person.giftIdeas,
+            person.favoriteColors,
+            person.clothingSizes,
+            person.previousGifts,
+            person.plans,
+            person.importantMemories
+        ].contains { value in
+            value?.isEmpty == false
+        }
     }
 
     private var profileSummary: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            if let nickname = person.nickname, !nickname.isEmpty {
-                Label(nickname, systemImage: "quote.bubble")
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(CelmiDesign.deepPlum)
-            }
+        HStack(alignment: .top, spacing: 16) {
+            PersonAvatarView(name: person.displayName, imageData: person.photoData, size: 76)
 
-            if person.isImportedFromContacts {
-                Label("Imported from Contacts", systemImage: "person.crop.circle.badge.checkmark")
-                    .font(.callout)
-                    .foregroundStyle(CelmiDesign.sage)
+            VStack(alignment: .leading, spacing: 10) {
+                if let nickname = person.nickname, !nickname.isEmpty {
+                    Label(nickname, systemImage: "quote.bubble")
+                        .font(.title3.weight(.semibold))
+                        .foregroundStyle(CelmiDesign.deepPlum)
+                }
+
+                if let context = person.relationshipContext, !context.isEmpty {
+                    Label(context, systemImage: "person.text.rectangle")
+                        .font(.callout)
+                        .foregroundStyle(.secondary)
+                }
+
+                if person.isImportedFromContacts {
+                    Label("Imported from Contacts", systemImage: "person.crop.circle.badge.checkmark")
+                        .font(.callout)
+                        .foregroundStyle(CelmiDesign.sage)
+                }
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .celmiCard()
         .accessibilityElement(children: .combine)
+    }
+
+    private var helpfulDetails: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Helpful Details")
+                .font(.headline)
+                .foregroundStyle(CelmiDesign.deepPlum)
+
+            DetailFieldRow(title: "Gift ideas", value: person.giftIdeas, systemImage: "gift")
+            DetailFieldRow(title: "Favorite colors", value: person.favoriteColors, systemImage: "paintpalette")
+            DetailFieldRow(title: "Clothing sizes", value: person.clothingSizes, systemImage: "tshirt")
+            DetailFieldRow(title: "Previous gifts", value: person.previousGifts, systemImage: "checklist")
+            DetailFieldRow(title: "Plans", value: person.plans, systemImage: "calendar")
+            DetailFieldRow(title: "Important memories", value: person.importantMemories, systemImage: "sparkles")
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .celmiCard()
+    }
+}
+
+private struct DetailFieldRow: View {
+    let title: String
+    let value: String?
+    let systemImage: String
+
+    var body: some View {
+        if let value, !value.isEmpty {
+            Label {
+                VStack(alignment: .leading, spacing: 3) {
+                    Text(title)
+                        .font(.caption.weight(.semibold))
+                        .foregroundStyle(.secondary)
+                    Text(value)
+                        .font(.body)
+                        .foregroundStyle(CelmiDesign.deepPlum)
+                }
+            } icon: {
+                Image(systemName: systemImage)
+                    .foregroundStyle(CelmiDesign.rose)
+            }
+        }
     }
 }
 
@@ -144,11 +207,21 @@ private struct SpecialDateCard: View {
                 .font(.body)
                 .foregroundStyle(.secondary)
 
-            if let event, let count = event.count {
+            if let event, let count = event.displayCount {
                 Text(countText(count))
                     .font(.subheadline)
                     .foregroundStyle(CelmiDesign.sage)
             }
+
+            if let notes = specialDate.notes, !notes.isEmpty {
+                Text(notes)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+
+            Text("Repeats: \(recurrenceText)")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
 
             Text(reminderText)
                 .font(.footnote)
@@ -161,10 +234,22 @@ private struct SpecialDateCard: View {
 
     private var monthDayText: String {
         var components = DateComponents()
+        components.year = specialDate.year
         components.month = specialDate.month
         components.day = specialDate.day
         let date = Calendar.current.date(from: components) ?? Date()
+        if specialDate.recurrence == .oneTime, specialDate.year != nil {
+            return date.formatted(.dateTime.month(.wide).day().year())
+        }
         return date.formatted(.dateTime.month(.wide).day())
+    }
+
+    private var recurrenceText: String {
+        if specialDate.recurrence == .custom, let days = specialDate.customRecurrenceDays {
+            return "Every \(days) days"
+        }
+
+        return specialDate.recurrence.title
     }
 
     private var reminderText: String {
@@ -177,6 +262,8 @@ private struct SpecialDateCard: View {
             case 0: "day of"
             case 1: "1 day before"
             case 7: "1 week before"
+            case 14: "2 weeks before"
+            case 30: "1 month before"
             default: "\(offset) days before"
             }
         }
@@ -187,8 +274,16 @@ private struct SpecialDateCard: View {
         switch specialDate.type {
         case .birthday:
             "Turns \(count)"
-        case .anniversary:
+        case .anniversary, .weddingAnniversary:
             "\(count)-year anniversary"
+        case .workAnniversary:
+            "\(count)-year work anniversary"
+        case .relationshipMilestone:
+            "\(count)-year relationship milestone"
+        case .graduation:
+            "\(count) years since graduation"
+        case .memorial:
+            "\(count) years remembered"
         case .milestone, .custom:
             "\(count) years"
         }

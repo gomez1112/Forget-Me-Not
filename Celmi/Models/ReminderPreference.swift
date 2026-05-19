@@ -7,6 +7,8 @@ final class ReminderPreference {
     var remindOnDay: Bool = true
     var remindOneDayBefore: Bool = true
     var remindOneWeekBefore: Bool = false
+    var remindTwoWeeksBefore: Bool = false
+    var remindOneMonthBefore: Bool = false
     var customDaysBefore: Int?
     var preferredNotificationHour: Int = 9
     var preferredNotificationMinute: Int = 0
@@ -19,6 +21,8 @@ final class ReminderPreference {
         remindOnDay: Bool = true,
         remindOneDayBefore: Bool = true,
         remindOneWeekBefore: Bool = false,
+        remindTwoWeeksBefore: Bool = false,
+        remindOneMonthBefore: Bool = false,
         customDaysBefore: Int? = nil,
         preferredNotificationHour: Int = 9,
         preferredNotificationMinute: Int = 0,
@@ -29,6 +33,8 @@ final class ReminderPreference {
         self.remindOnDay = remindOnDay
         self.remindOneDayBefore = remindOneDayBefore
         self.remindOneWeekBefore = remindOneWeekBefore
+        self.remindTwoWeeksBefore = remindTwoWeeksBefore
+        self.remindOneMonthBefore = remindOneMonthBefore
         self.customDaysBefore = customDaysBefore
         self.preferredNotificationHour = preferredNotificationHour
         self.preferredNotificationMinute = preferredNotificationMinute
@@ -42,6 +48,8 @@ final class ReminderPreference {
         if remindOnDay { offsets.append(0) }
         if remindOneDayBefore { offsets.append(1) }
         if remindOneWeekBefore { offsets.append(7) }
+        if remindTwoWeeksBefore { offsets.append(14) }
+        if remindOneMonthBefore { offsets.append(30) }
         if let customDaysBefore, customDaysBefore > 0 {
             offsets.append(customDaysBefore)
         }

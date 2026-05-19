@@ -41,6 +41,7 @@ struct PaywallView: View {
             .padding(.top, 18)
             .padding(.trailing, 18)
         }
+        .celmiSheetSizing(width: 560, height: 720)
     }
 }
 

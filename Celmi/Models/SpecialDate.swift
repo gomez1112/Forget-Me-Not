@@ -6,9 +6,12 @@ final class SpecialDate {
     var id: UUID = UUID()
     var title: String = ""
     var typeRawValue: String = SpecialDateType.birthday.rawValue
+    var recurrenceRawValue: String = SpecialDateRecurrence.yearly.rawValue
     var month: Int = 1
     var day: Int = 1
     var year: Int?
+    var customRecurrenceDays: Int?
+    var notes: String?
     var createdAt: Date = Date()
     var updatedAt: Date = Date()
 
@@ -21,9 +24,12 @@ final class SpecialDate {
         id: UUID = UUID(),
         title: String,
         type: SpecialDateType,
+        recurrence: SpecialDateRecurrence = .yearly,
         month: Int,
         day: Int,
         year: Int? = nil,
+        customRecurrenceDays: Int? = nil,
+        notes: String? = nil,
         person: Person? = nil,
         reminderPreference: ReminderPreference? = nil,
         createdAt: Date = Date(),
@@ -32,9 +38,12 @@ final class SpecialDate {
         self.id = id
         self.title = title
         self.typeRawValue = type.rawValue
+        self.recurrenceRawValue = recurrence.rawValue
         self.month = month
         self.day = day
         self.year = year
+        self.customRecurrenceDays = customRecurrenceDays
+        self.notes = notes
         self.person = person
         self.reminderPreference = reminderPreference
         self.createdAt = createdAt
@@ -44,5 +53,10 @@ final class SpecialDate {
     var type: SpecialDateType {
         get { SpecialDateType(rawValue: typeRawValue) ?? .custom }
         set { typeRawValue = newValue.rawValue }
+    }
+
+    var recurrence: SpecialDateRecurrence {
+        get { SpecialDateRecurrence(rawValue: recurrenceRawValue) ?? .yearly }
+        set { recurrenceRawValue = newValue.rawValue }
     }
 }

@@ -30,13 +30,19 @@ struct ImportedPersonCandidate: Identifiable, Hashable, Sendable {
     var id: String { contactIdentifier }
     var contactIdentifier: String
     var fullName: String
+    var nickname: String? = nil
+    var organizationName: String? = nil
+    var imageData: Data? = nil
     var dates: [ImportedSpecialDateCandidate]
     var isSelected: Bool = true
 
     func makePerson(settings: AppSettings) -> Person {
         let person = Person(
             fullName: fullName,
+            nickname: cleanOptional(nickname),
             contactIdentifier: contactIdentifier,
+            relationshipContext: cleanOptional(organizationName),
+            photoData: imageData,
             isImportedFromContacts: true
         )
         person.specialDates = dates.map { candidate in
@@ -51,6 +57,11 @@ struct ImportedPersonCandidate: Identifiable, Hashable, Sendable {
             )
         }
         return person
+    }
+
+    private func cleanOptional(_ value: String?) -> String? {
+        let trimmed = value?.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed?.isEmpty == false ? trimmed : nil
     }
 }
 
@@ -104,8 +115,10 @@ final class ContactsService {
             CNContactGivenNameKey as CNKeyDescriptor,
             CNContactFamilyNameKey as CNKeyDescriptor,
             CNContactNicknameKey as CNKeyDescriptor,
+            CNContactOrganizationNameKey as CNKeyDescriptor,
             CNContactBirthdayKey as CNKeyDescriptor,
             CNContactDatesKey as CNKeyDescriptor,
+            CNContactThumbnailImageDataKey as CNKeyDescriptor,
             CNContactFormatter.descriptorForRequiredKeys(for: .fullName)
         ]
         let request = CNContactFetchRequest(keysToFetch: keys)
@@ -126,8 +139,7 @@ final class ContactsService {
 
             dates.append(contentsOf: contact.dates.compactMap { labeledDate in
                 let label = CNLabeledValue<NSDateComponents>.localizedString(forLabel: labeledDate.label ?? "")
-                let lowercased = label.lowercased()
-                let type: SpecialDateType = lowercased.contains("anniversary") ? .anniversary : .custom
+                let type = Self.type(forContactDateLabel: label)
                 return Self.candidate(from: labeledDate.value as DateComponents, title: label, type: type)
             })
 
@@ -135,6 +147,9 @@ final class ContactsService {
             candidates.append(ImportedPersonCandidate(
                 contactIdentifier: contact.identifier,
                 fullName: name,
+                nickname: contact.nickname,
+                organizationName: contact.organizationName,
+                imageData: contact.thumbnailImageData,
                 dates: dates
             ))
         }
@@ -165,5 +180,39 @@ final class ContactsService {
             day: day,
             year: components.year
         )
+    }
+
+    nonisolated private static func type(forContactDateLabel label: String) -> SpecialDateType {
+        let lowercased = label.lowercased()
+
+        if lowercased.contains("wedding") {
+            return .weddingAnniversary
+        }
+
+        if lowercased.contains("work") || lowercased.contains("job") || lowercased.contains("company") {
+            return .workAnniversary
+        }
+
+        if lowercased.contains("anniversary") {
+            return .anniversary
+        }
+
+        if lowercased.contains("graduation") || lowercased.contains("graduate") {
+            return .graduation
+        }
+
+        if lowercased.contains("memorial") || lowercased.contains("remember") {
+            return .memorial
+        }
+
+        if lowercased.contains("relationship") {
+            return .relationshipMilestone
+        }
+
+        if lowercased.contains("milestone") {
+            return .milestone
+        }
+
+        return .custom
     }
 }

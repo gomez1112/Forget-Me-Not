@@ -12,6 +12,13 @@ enum CelmiSampleData {
                 fullName: "Nicole Rivera",
                 nickname: "Nicole",
                 notes: "Loves handwritten cards and brunch plans.",
+                relationshipContext: "College friend",
+                giftIdeas: "New stationery, local coffee beans, framed photos.",
+                favoriteColors: "Forest green, cream",
+                clothingSizes: "Sweater: M",
+                previousGifts: "2025: ceramic mug",
+                plans: "Book brunch the weekend before.",
+                importantMemories: "First road trip after graduation.",
                 dates: [
                     DateSeed(title: "Birthday", type: .birthday, month: 3, day: 11, year: 1989)
                 ]
@@ -36,7 +43,7 @@ enum CelmiSampleData {
                 fullName: "Mom and Dad",
                 notes: "Book dinner early.",
                 dates: [
-                    DateSeed(title: "Anniversary", type: .anniversary, month: 6, day: 4, year: 1987)
+                    DateSeed(title: "Anniversary", type: .weddingAnniversary, month: 6, day: 4, year: 1987)
                 ]
             ),
             makePerson(
@@ -66,9 +73,27 @@ enum CelmiSampleData {
         fullName: String,
         nickname: String? = nil,
         notes: String? = nil,
+        relationshipContext: String? = nil,
+        giftIdeas: String? = nil,
+        favoriteColors: String? = nil,
+        clothingSizes: String? = nil,
+        previousGifts: String? = nil,
+        plans: String? = nil,
+        importantMemories: String? = nil,
         dates: [DateSeed]
     ) -> Person {
-        let person = Person(fullName: fullName, nickname: nickname, notes: notes)
+        let person = Person(
+            fullName: fullName,
+            nickname: nickname,
+            notes: notes,
+            relationshipContext: relationshipContext,
+            giftIdeas: giftIdeas,
+            favoriteColors: favoriteColors,
+            clothingSizes: clothingSizes,
+            previousGifts: previousGifts,
+            plans: plans,
+            importantMemories: importantMemories
+        )
         let specialDates = dates.map { seed in
             SpecialDate(
                 title: seed.title,

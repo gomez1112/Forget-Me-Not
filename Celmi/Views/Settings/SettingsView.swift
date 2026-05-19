@@ -16,84 +16,79 @@ struct SettingsView: View {
     @State private var showingDeleteImportedConfirmation = false
     @State private var showingDeleteAllConfirmation = false
 
+    private var reminderCapacity: ReminderCapacity {
+        ReminderCapacity.current(for: people)
+    }
+
     var body: some View {
-        List {
-            Section("Privacy") {
-                Text("Celmi keeps your data private. Contact information stays on device and can sync through your private iCloud account when enabled.")
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
+        ScrollView {
+            VStack(alignment: .leading, spacing: 18) {
+                settingsSection("Privacy") {
+                    Text("Celmi keeps your data private. Contact information stays on device and can sync through your private iCloud account when enabled.")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
 
-                Button("Privacy Details", systemImage: "lock.shield") {
-                    showingPrivacy = true
-                }
-            }
-
-            Section("Contacts") {
-                LabeledContent("Permission", value: model.contactsPermissionState.title)
-                Button("Refresh Contacts", systemImage: "arrow.clockwise") {
-                    showingImport = true
-                }
-            }
-
-            Section("Notifications") {
-                LabeledContent("Permission", value: model.notificationPermissionState.title)
-                Button("Request Notifications", systemImage: "bell.badge") {
-                    Task {
-                        await model.requestNotificationPermission()
+                    settingsButton("Privacy Details", systemImage: "lock.shield") {
+                        showingPrivacy = true
                     }
                 }
-                Button("Reschedule All Reminders", systemImage: "calendar.badge.clock") {
-                    Task {
-                        await model.rescheduleReminders(for: people)
+
+                settingsSection("Contacts") {
+                    LabeledContent("Permission", value: model.contactsPermissionState.title)
+                    settingsButton("Refresh Contacts", systemImage: "arrow.clockwise") {
+                        showingImport = true
                     }
                 }
-            }
 
-            Section("Default Reminder Time") {
-                DatePicker(
-                    "Time",
-                    selection: Binding(
-                        get: { settings.defaultReminderDate },
-                        set: { newDate in
-                            let components = Calendar.current.dateComponents([.hour, .minute], from: newDate)
-                            settings.defaultReminderHour = components.hour ?? 9
-                            settings.defaultReminderMinute = components.minute ?? 0
+                settingsSection("Notifications") {
+                    if reminderCapacity.exceedsSystemLimit {
+                        ReminderLimitWarningView(capacity: reminderCapacity)
+                    }
+
+                    LabeledContent("Permission", value: model.notificationPermissionState.title)
+                    settingsButton("Request Notifications", systemImage: "bell.badge") {
+                        Task {
+                            await model.requestNotificationPermission()
                         }
-                    ),
-                    displayedComponents: .hourAndMinute
-                )
-                Toggle("Day of", isOn: $settings.defaultRemindOnDay)
-                Toggle("One day before", isOn: $settings.defaultRemindOneDayBefore)
-                Toggle("One week before", isOn: $settings.defaultRemindOneWeekBefore)
-            }
+                    }
+                    settingsButton("Reschedule All Reminders", systemImage: "calendar.badge.clock") {
+                        Task {
+                            await model.rescheduleReminders(for: people)
+                        }
+                    }
+                }
 
-            Section("Premium") {
-                LabeledContent("Tier", value: entitlementService.tier.rawValue.capitalized)
-                Button("Manage Subscription", systemImage: "crown") {
-                    showingPaywall = true
+                defaultReminderSettings
+
+                settingsSection("Premium") {
+                    LabeledContent("Tier", value: entitlementService.tier.rawValue.capitalized)
+                    settingsButton("Manage Subscription", systemImage: "crown") {
+                        showingPaywall = true
+                    }
+
+                    RestorePurchasesButton<CelmiAppTier>()
+                        .accessibilityHint("Checks the App Store for previous Celmi Pro purchases.")
                 }
 
                 LifetimeUnlockSettingsCard()
 
-                RestorePurchasesButton<CelmiAppTier>()
-                    .accessibilityHint("Checks the App Store for previous Celmi Pro purchases.")
-            }
-
-            Section("Onboarding") {
-                Button("Replay Onboarding", systemImage: "sparkles") {
-                    settings.hasCompletedOnboarding = false
-                }
-            }
-
-            Section("Data") {
-                Button("Delete Imported Data", systemImage: "person.crop.circle.badge.xmark", role: .destructive) {
-                    showingDeleteImportedConfirmation = true
+                settingsSection("Onboarding") {
+                    settingsButton("Replay Onboarding", systemImage: "sparkles") {
+                        settings.hasCompletedOnboarding = false
+                    }
                 }
 
-                Button("Delete All App Data", systemImage: "trash", role: .destructive) {
-                    showingDeleteAllConfirmation = true
+                settingsSection("Data") {
+                    settingsButton("Delete Imported Data", systemImage: "person.crop.circle.badge.xmark", role: .destructive) {
+                        showingDeleteImportedConfirmation = true
+                    }
+
+                    settingsButton("Delete All App Data", systemImage: "trash", role: .destructive) {
+                        showingDeleteAllConfirmation = true
+                    }
                 }
             }
+            .padding()
         }
         .navigationTitle("Settings")
         .celmiScreenBackground()
@@ -121,10 +116,87 @@ struct SettingsView: View {
         }
     }
 
+    private func settingsSection<Content: View>(
+        _ title: String,
+        @ViewBuilder content: () -> Content
+    ) -> some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.caption.weight(.semibold))
+                .foregroundStyle(.secondary)
+
+            VStack(alignment: .leading, spacing: 12) {
+                content()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .celmiCard(cornerRadius: 18)
+        }
+    }
+
+    private var defaultReminderSettings: some View {
+        settingsSection("Default Reminder Time") {
+            DatePicker(
+                "Time",
+                selection: Binding(
+                    get: { settings.defaultReminderDate },
+                    set: { newDate in
+                        let components = Calendar.current.dateComponents([.hour, .minute], from: newDate)
+                        settings.defaultReminderHour = components.hour ?? 9
+                        settings.defaultReminderMinute = components.minute ?? 0
+                    }
+                ),
+                displayedComponents: .hourAndMinute
+            )
+
+            Toggle("Day of", isOn: $settings.defaultRemindOnDay)
+            Toggle("One day before", isOn: $settings.defaultRemindOneDayBefore)
+            Toggle("One week before", isOn: $settings.defaultRemindOneWeekBefore)
+            Toggle("Two weeks before", isOn: $settings.defaultRemindTwoWeeksBefore)
+            Toggle("One month before", isOn: $settings.defaultRemindOneMonthBefore)
+            Toggle("Custom lead time", isOn: Binding(
+                get: { settings.defaultCustomDaysBefore != nil },
+                set: { isOn in
+                    settings.defaultCustomDaysBefore = isOn ? (settings.defaultCustomDaysBefore ?? 3) : nil
+                }
+            ))
+
+            if settings.defaultCustomDaysBefore != nil {
+                Stepper(
+                    "Custom: \(settings.defaultCustomDaysBefore ?? 3) days before",
+                    value: Binding(
+                        get: { settings.defaultCustomDaysBefore ?? 3 },
+                        set: { settings.defaultCustomDaysBefore = $0 }
+                    ),
+                    in: 2...365
+                )
+            }
+        }
+    }
+
+    private func settingsButton(
+        _ title: String,
+        systemImage: String,
+        role: ButtonRole? = nil,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(role: role, action: action) {
+            Label(title, systemImage: systemImage)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .contentShape(Rectangle())
+        }
+        .buttonStyle(.plain)
+        .padding(.vertical, 4)
+        .foregroundStyle(role == .destructive ? Color.red : CelmiDesign.rose)
+    }
+
     private func deleteImportedData() {
         people.filter(\.isImportedFromContacts).forEach(modelContext.delete)
         try? modelContext.save()
-        model.refreshWidgets()
+        let remainingPeople = people.filter { !$0.isImportedFromContacts }
+        model.refreshWidgets(for: remainingPeople)
+        Task {
+            await model.rescheduleReminders(for: remainingPeople)
+        }
     }
 
     private func deleteAllData() {
@@ -133,6 +205,6 @@ struct SettingsView: View {
         Task {
             await model.cancelAllReminders()
         }
-        model.refreshWidgets()
+        model.refreshWidgets(for: [])
     }
 }

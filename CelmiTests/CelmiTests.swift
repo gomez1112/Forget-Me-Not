@@ -51,6 +51,27 @@ struct CelmiTests {
         #expect(service.anniversaryCount(on: occurrence, startYear: 1987) == 39)
     }
 
+    @Test func displayCountHidesZeroYearEvents() {
+        let event = SpecialDateEvent(
+            id: "event-1",
+            personID: UUID(),
+            specialDateID: UUID(),
+            personName: "QA Test Person",
+            title: "Work Anniversary",
+            type: .workAnniversary,
+            month: 5,
+            day: 18,
+            year: 2026,
+            recurrence: .yearly,
+            personPhotoData: nil,
+            nextDate: calendar.date(from: DateComponents(year: 2026, month: 5, day: 18))!,
+            daysRemaining: 0,
+            count: 0
+        )
+
+        #expect(event.displayCount == nil)
+    }
+
     @Test func notificationIdentifierIsStable() {
         let personID = UUID(uuidString: "AAAAAAAA-AAAA-AAAA-AAAA-AAAAAAAAAAAA")!
         let dateID = UUID(uuidString: "BBBBBBBB-BBBB-BBBB-BBBB-BBBBBBBBBBBB")!

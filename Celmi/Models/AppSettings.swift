@@ -9,6 +9,9 @@ final class AppSettings {
     var defaultRemindOnDay: Bool = true
     var defaultRemindOneDayBefore: Bool = true
     var defaultRemindOneWeekBefore: Bool = false
+    var defaultRemindTwoWeeksBefore: Bool = false
+    var defaultRemindOneMonthBefore: Bool = false
+    var defaultCustomDaysBefore: Int?
     var hasCompletedOnboarding: Bool = false
     var iCloudSyncEnabledExplanationShown: Bool = false
 
@@ -19,6 +22,9 @@ final class AppSettings {
         defaultRemindOnDay: Bool = true,
         defaultRemindOneDayBefore: Bool = true,
         defaultRemindOneWeekBefore: Bool = false,
+        defaultRemindTwoWeeksBefore: Bool = false,
+        defaultRemindOneMonthBefore: Bool = false,
+        defaultCustomDaysBefore: Int? = nil,
         hasCompletedOnboarding: Bool = false,
         iCloudSyncEnabledExplanationShown: Bool = false
     ) {
@@ -28,6 +34,9 @@ final class AppSettings {
         self.defaultRemindOnDay = defaultRemindOnDay
         self.defaultRemindOneDayBefore = defaultRemindOneDayBefore
         self.defaultRemindOneWeekBefore = defaultRemindOneWeekBefore
+        self.defaultRemindTwoWeeksBefore = defaultRemindTwoWeeksBefore
+        self.defaultRemindOneMonthBefore = defaultRemindOneMonthBefore
+        self.defaultCustomDaysBefore = defaultCustomDaysBefore
         self.hasCompletedOnboarding = hasCompletedOnboarding
         self.iCloudSyncEnabledExplanationShown = iCloudSyncEnabledExplanationShown
     }
@@ -37,6 +46,9 @@ final class AppSettings {
             remindOnDay: defaultRemindOnDay,
             remindOneDayBefore: defaultRemindOneDayBefore,
             remindOneWeekBefore: defaultRemindOneWeekBefore,
+            remindTwoWeeksBefore: defaultRemindTwoWeeksBefore,
+            remindOneMonthBefore: defaultRemindOneMonthBefore,
+            customDaysBefore: defaultCustomDaysBefore,
             preferredNotificationHour: defaultReminderHour,
             preferredNotificationMinute: defaultReminderMinute
         )

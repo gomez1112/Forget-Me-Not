@@ -52,6 +52,7 @@ struct ImportContactsView: View {
                 }
             }
         }
+        .celmiSheetSizing(width: 560, height: 620)
     }
 
     private var privacySection: some View {
@@ -104,12 +105,29 @@ struct ImportContactsView: View {
 
                 ForEach(model.importCandidates) { candidate in
                     Toggle(isOn: selectionBinding(for: candidate)) {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text(candidate.fullName)
-                                .font(.headline)
-                            Text(candidate.dates.map(\.title).joined(separator: ", "))
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
+                        HStack(spacing: 12) {
+                            PersonAvatarView(name: candidate.fullName, imageData: candidate.imageData, size: 40)
+
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(candidate.fullName)
+                                    .font(.headline)
+
+                                if let nickname = candidate.nickname, !nickname.isEmpty {
+                                    Text(nickname)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+
+                                Text(candidate.dates.map { "\($0.title) (\($0.type.title))" }.joined(separator: ", "))
+                                    .font(.subheadline)
+                                    .foregroundStyle(.secondary)
+
+                                if let organization = candidate.organizationName, !organization.isEmpty {
+                                    Text(organization)
+                                        .font(.caption)
+                                        .foregroundStyle(.secondary)
+                                }
+                            }
                         }
                     }
                     .accessibilityLabel("Import \(candidate.fullName)")

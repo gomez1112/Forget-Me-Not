@@ -26,7 +26,7 @@ struct OnboardingFlowView: View {
             ),
             OnboardingPage(
                 title: "Import Effortlessly",
-                description: "Celmi can find birthdays already saved in Contacts, so setup takes seconds. You can also add people manually.",
+                description: "Celmi can find birthdays already saved in Contacts, so setup takes seconds. You can also add people, pets, projects, and occasions manually.",
                 image: "CelmiPrivateSync",
                 backgroundColor: CelmiDesign.background,
                 iconColor: CelmiDesign.gold,

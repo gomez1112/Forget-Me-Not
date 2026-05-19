@@ -20,7 +20,7 @@ struct PrivacyView: View {
                 }
 
                 Section("Contacts") {
-                    Text("Contacts access is optional. Celmi only reads birthdays and date fields to help you set up faster. You can always add people manually.")
+                    Text("Contacts access is optional. Celmi only reads birthdays and date fields to help you set up faster. You can always add people, pets, projects, and occasions manually.")
                 }
 
                 Section("Notifications") {
@@ -36,5 +36,6 @@ struct PrivacyView: View {
                 }
             }
         }
+        .celmiSheetSizing(width: 560, height: 620)
     }
 }

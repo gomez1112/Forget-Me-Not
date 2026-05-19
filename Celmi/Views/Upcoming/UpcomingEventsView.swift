@@ -9,14 +9,25 @@ struct UpcomingEventsView: View {
         let events = SpecialDateEvent.events(for: people)
         return [
             ("Today", events.filter { $0.daysRemaining == 0 }),
-            ("This Week", events.filter { (1...7).contains($0.daysRemaining) }),
+            ("Tomorrow", events.filter { $0.daysRemaining == 1 }),
+            ("This Week", events.filter { (2...7).contains($0.daysRemaining) }),
             ("This Month", events.filter { (8...31).contains($0.daysRemaining) }),
             ("Later", events.filter { $0.daysRemaining > 31 })
         ].filter { !$0.1.isEmpty }
     }
 
+    private var reminderCapacity: ReminderCapacity {
+        ReminderCapacity.current(for: people)
+    }
+
     var body: some View {
         List {
+            if reminderCapacity.exceedsSystemLimit {
+                ReminderLimitWarningView(capacity: reminderCapacity)
+                    .listRowBackground(Color.clear)
+                    .listRowSeparator(.hidden)
+            }
+
             if groupedEvents.isEmpty {
                 CelmiEmptyStateView(
                     title: "No dates yet.",
@@ -55,12 +66,12 @@ struct UpcomingEventRow: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Image(systemName: event.type.systemImage)
-                .font(.title3)
-                .frame(width: 38, height: 38)
-                .background(CelmiDesign.rose.opacity(0.14), in: Circle())
-                .foregroundStyle(CelmiDesign.rose)
-                .accessibilityHidden(true)
+            PersonAvatarView(
+                name: event.personName,
+                imageData: event.personPhotoData,
+                size: 38,
+                systemImage: event.type.systemImage
+            )
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(event.personName)
@@ -70,12 +81,16 @@ struct UpcomingEventRow: View {
                 HStack(spacing: 6) {
                     Text(event.type.title)
                     Text(event.monthDayText)
-                    if let count = event.count {
+                    if let count = event.displayCount {
                         Text("- \(count)")
                     }
                 }
                 .font(.subheadline)
                 .foregroundStyle(.secondary)
+
+                Text(event.recurrence.title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
 
             Spacer()

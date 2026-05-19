@@ -29,7 +29,7 @@ struct PeopleView: View {
             return "No \(selectedFilter.emptyStatePluralTitle) yet."
         }
 
-        return "Your inner circle is waiting."
+        return "Your important dates are waiting."
     }
 
     private var emptyStateMessage: String {
@@ -41,7 +41,7 @@ struct PeopleView: View {
             return "Add a \(selectedFilter.emptyStateSingularTitle) for someone or switch filters."
         }
 
-        return "Import birthdays from Contacts or add someone manually."
+        return "Import dates from Contacts or add a person, pet, project, or occasion manually."
     }
 
     var body: some View {
@@ -78,14 +78,14 @@ struct PeopleView: View {
                 .accessibilityLabel("Import from Contacts")
                 .accessibilityIdentifier("people.import")
 
-                Button("Add Person", systemImage: "plus") {
+                Button("Add Person or Occasion", systemImage: "plus") {
                     if entitlementService.isPro || people.count < entitlementService.freePeopleLimit {
                         showingAddPerson = true
                     } else {
                         showingPaywall = true
                     }
                 }
-                .accessibilityLabel("Add Person")
+                .accessibilityLabel("Add Person or Occasion")
                 .accessibilityIdentifier("people.addPerson")
             }
         }
@@ -105,10 +105,10 @@ struct PeopleView: View {
             Picker("Filter", selection: $selectedFilter) {
                 Text("All").tag(Optional<SpecialDateType>.none)
                 ForEach(SpecialDateType.allCases) { type in
-                    Text(type.filterTitle).tag(Optional(type))
+                    Label(type.title, systemImage: type.systemImage).tag(Optional(type))
                 }
             }
-            .pickerStyle(.segmented)
+            .pickerStyle(.menu)
             .accessibilityLabel("Filter people")
         }
         .listRowBackground(Color.clear)
@@ -121,7 +121,17 @@ private extension SpecialDateType {
         case .birthday:
             "Birthday"
         case .anniversary:
-            "Anniv."
+            "Anniversary"
+        case .weddingAnniversary:
+            "Wedding anniversary"
+        case .workAnniversary:
+            "Work anniversary"
+        case .relationshipMilestone:
+            "relationship milestone"
+        case .graduation:
+            "graduation"
+        case .memorial:
+            "memorial"
         case .milestone:
             "Milestone"
         case .custom:
@@ -135,6 +145,16 @@ private extension SpecialDateType {
             "birthday"
         case .anniversary:
             "anniversary"
+        case .weddingAnniversary:
+            "wedding anniversary"
+        case .workAnniversary:
+            "work anniversary"
+        case .relationshipMilestone:
+            "relationship milestone"
+        case .graduation:
+            "graduation"
+        case .memorial:
+            "memorial"
         case .milestone:
             "milestone"
         case .custom:
@@ -148,6 +168,16 @@ private extension SpecialDateType {
             "birthdays"
         case .anniversary:
             "anniversaries"
+        case .weddingAnniversary:
+            "wedding anniversaries"
+        case .workAnniversary:
+            "work anniversaries"
+        case .relationshipMilestone:
+            "relationship milestones"
+        case .graduation:
+            "graduations"
+        case .memorial:
+            "memorials"
         case .milestone:
             "milestones"
         case .custom:
@@ -165,12 +195,7 @@ private struct PersonRowView: View {
 
     var body: some View {
         HStack(spacing: 14) {
-            Text(initials)
-                .font(.headline)
-                .foregroundStyle(.white)
-                .frame(width: 44, height: 44)
-                .background(CelmiDesign.rose, in: Circle())
-                .accessibilityHidden(true)
+            PersonAvatarView(name: person.displayName, imageData: person.photoData, size: 44)
 
             VStack(alignment: .leading, spacing: 4) {
                 Text(person.displayName)
@@ -182,7 +207,7 @@ private struct PersonRowView: View {
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 } else {
-                    Text("No saved milestones")
+                    Text("No saved dates")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
                 }
@@ -197,10 +222,5 @@ private struct PersonRowView: View {
         }
         .padding(.vertical, 8)
         .accessibilityElement(children: .combine)
-    }
-
-    private var initials: String {
-        let parts = person.displayName.split(separator: " ")
-        return parts.prefix(2).compactMap(\.first).map(String.init).joined().uppercased()
     }
 }

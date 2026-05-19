@@ -2,6 +2,7 @@ import SwiftData
 import SwiftUI
 
 struct DashboardView: View {
+    @Environment(CelmiModel.self) private var model
     @Query(sort: \Person.fullName) private var people: [Person]
     @Bindable var settings: AppSettings
 
@@ -12,10 +13,23 @@ struct DashboardView: View {
         SpecialDateEvent.events(for: people)
     }
 
+    private var reminderCapacity: ReminderCapacity {
+        ReminderCapacity.current(for: people)
+    }
+
+    private var widgetRefreshID: String {
+        events.map { "\($0.id)-\($0.daysRemaining)" }.joined(separator: "|")
+    }
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 24) {
                 header
+
+                if reminderCapacity.exceedsSystemLimit {
+                    ReminderLimitWarningView(capacity: reminderCapacity)
+                        .celmiCard(cornerRadius: 18)
+                }
 
                 if let nextEvent = events.first {
                     NextCelebrationCard(event: nextEvent)
@@ -46,11 +60,11 @@ struct DashboardView: View {
 
             ToolbarItem(placement: .primaryAction) {
                 Button(action: showAddPerson) {
-                    Label("Add Person", systemImage: "plus")
+                    Label("Add Person or Occasion", systemImage: "plus")
                 }
                 .labelStyle(.iconOnly)
-                .help("Add Person")
-                .accessibilityLabel("Add Person")
+                .help("Add Person or Occasion")
+                .accessibilityLabel("Add Person or Occasion")
                 .accessibilityIdentifier("dashboard.addPerson")
             }
         }
@@ -59,6 +73,9 @@ struct DashboardView: View {
         }
         .sheet(isPresented: $showingImport) {
             ImportContactsView(settings: settings)
+        }
+        .task(id: widgetRefreshID) {
+            model.refreshWidgets(for: people)
         }
     }
 
@@ -123,7 +140,7 @@ private struct DashboardEmptyStateCard: View {
                 Text("Your inner circle is waiting.")
                     .font(.headline)
                     .foregroundStyle(CelmiDesign.deepPlum)
-                Text("Import birthdays from Contacts or add someone manually.")
+                Text("Import dates from Contacts or add a person, pet, project, or occasion manually.")
                     .font(.subheadline)
                     .foregroundStyle(.secondary)
                     .fixedSize(horizontal: false, vertical: true)
@@ -140,7 +157,15 @@ private struct NextCelebrationCard: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 18) {
-            EventTypeBadge(type: event.type)
+            HStack(spacing: 14) {
+                PersonAvatarView(
+                    name: event.personName,
+                    imageData: event.personPhotoData,
+                    size: 54,
+                    systemImage: event.type.systemImage
+                )
+                EventTypeBadge(type: event.type)
+            }
 
             VStack(alignment: .leading, spacing: 8) {
                 Text("\(event.personName)'s \(event.type.title.lowercased()) is \(event.relativeText.lowercased())")
