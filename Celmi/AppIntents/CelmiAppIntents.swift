@@ -45,7 +45,10 @@ enum CelmiAppIntentRouteStore {
 struct OpenCelmiIntent: AppIntent {
     static let title: LocalizedStringResource = "Open Celmi"
     static let description = IntentDescription("Opens Celmi to Today, Upcoming Dates, People, Settings, or the add-date flow.")
-    static var supportedModes: IntentModes { .foreground(.deferred) }
+    static var supportedModes: IntentModes { .foreground(.immediate) }
+
+    @available(*, deprecated, message: "Use supportedModes instead.")
+    static var openAppWhenRun: Bool { true }
 
     @Parameter(title: "Destination")
     var destination: CelmiAppDestination
@@ -71,7 +74,10 @@ struct OpenCelmiIntent: AppIntent {
 struct AddImportantDateIntent: AppIntent {
     static let title: LocalizedStringResource = "Add Important Date"
     static let description = IntentDescription("Opens Celmi to add a birthday, anniversary, milestone, or other important date.")
-    static var supportedModes: IntentModes { .foreground(.deferred) }
+    static var supportedModes: IntentModes { .foreground(.immediate) }
+
+    @available(*, deprecated, message: "Use supportedModes instead.")
+    static var openAppWhenRun: Bool { true }
 
     init() {}
 
@@ -86,16 +92,19 @@ struct ShowNextImportantDateIntent: AppIntent {
     static let description = IntentDescription("Shows the next birthday, anniversary, milestone, or important date saved in Celmi.")
     static var supportedModes: IntentModes { .background }
 
+    @available(*, deprecated, message: "Use supportedModes instead.")
+    static var openAppWhenRun: Bool { false }
+
     init() {}
 
     func perform() async throws -> some IntentResult & ProvidesDialog {
         guard let event = await CelmiIntentWidgetSnapshotStore.loadNextEvent() else {
-            return .result(dialog: "No upcoming dates are saved in Celmi yet.")
+            return .result(dialog: IntentDialog("No upcoming dates are saved in Celmi yet."))
         }
 
         let eventName = event.eventTitle.lowercased()
         let relativeDate = event.daysRemainingText.lowercased()
-        return .result(dialog: "\(event.personName)'s \(eventName) is \(relativeDate) on \(event.eventDateText).")
+        return .result(dialog: IntentDialog("\(event.personName)'s \(eventName) is \(relativeDate) on \(event.eventDateText)."))
     }
 }
 
